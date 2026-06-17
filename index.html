@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KaPi-Noy | Smart Dashboard</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+
+    body{
+      background:linear-gradient(135deg,#f7f3ec,#ebe3d4);
+      font-family:'Inter','Segoe UI',Arial,sans-serif;
+      padding:28px;
+      color:#1f2a2a;
+      min-height:100vh;
+    }
+
+    .dashboard-container{max-width:1800px;margin:auto;}
+
+    .header{
+      background:rgba(255,255,255,0.75);
+      backdrop-filter:blur(18px);
+      border-radius:28px;
+      padding:16px 28px;
+      margin-bottom:28px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 6px 20px rgba(0,0,0,0.04);
+      border:1px solid rgba(255,255,255,0.5);
+    }
+
+    .header-left{display:flex;align-items:center;gap:18px;}
+
+    .logo{
+      width:56px;height:56px;border-radius:50%;
+      object-fit:cover;border:2px solid #d7c8b7;
+      background:#fff;
+    }
+
+    .header-text h1{font-size:20px;font-weight:700;color:#2d472c;margin-bottom:3px;}
+    .header-text p{font-size:11px;color:#756551;}
+
+    .header-right{display:flex;align-items:center;gap:12px;}
+
+    .live-badge{
+      background:#e7f7ea;color:#1f7a33;
+      padding:6px 14px;border-radius:40px;
+      font-size:10px;font-weight:600;
+      animation:pulse 1.5s infinite;
+    }
+
+    @keyframes pulse{
+      0%{opacity:1;}
+      50%{opacity:.6;}
+      100%{opacity:1;}
+    }
+
+    .logout-btn{
+      background:linear-gradient(135deg,#c84d37,#9f2d1b);
+      color:white;border:none;padding:7px 18px;
+      border-radius:32px;font-size:11px;font-weight:600;
+      cursor:pointer;
+    }
+
+    .kpi-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+      margin-bottom:24px;
+    }
+
+    .kpi-card,.insight-card,.tracking-section,.history-section{
+      background:rgba(255,255,255,0.78);
+      backdrop-filter:blur(12px);
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,0.45);
+      box-shadow:0 6px 16px rgba(0,0,0,0.03);
+      overflow:hidden;
+    }
+
+    .kpi-card{padding:24px 26px;}
+
+    .kpi-label{
+      font-size:12px;text-transform:uppercase;
+      font-weight:700;color:#7a6a58;margin-bottom:10px;
+    }
+
+    .kpi-value{
+      font-size:48px;font-weight:800;color:#234122;line-height:1;
+    }
+
+    .kpi-sub{
+      margin-top:10px;padding-top:8px;
+      border-top:1px solid #ece3d8;
+      font-size:11px;color:#8c7a68;
+    }
+
+    .section-title,.insight-header{
+      padding:12px 22px;
+      background:#f9f5ef;
+      border-bottom:1px solid #ece1d4;
+    }
+
+    .section-title h3,.insight-header h3{
+      font-size:15px;
+      font-weight:600;
+      color:#3b4a38;
+    }
+
+    .tracking-section{margin-bottom:24px;}
+
+    .tracking-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:14px;
+      padding:18px 20px;
+    }
+
+    .track-card{
+      background:#faf7f2;
+      border-radius:20px;
+      padding:14px 12px;
+      text-align:center;
+      border:1px solid #eee2d4;
+    }
+
+    .track-size{
+      font-size:30px;
+      font-weight:800;
+      color:#2f522f;
+      margin-bottom:6px;
+    }
+
+    .track-count{
+      font-size:44px;
+      font-weight:800;
+      color:#234122;
+      line-height:1;
+    }
+
+    .track-label{
+      font-size:10px;
+      text-transform:uppercase;
+      font-weight:600;
+      color:#8c7a68;
+      margin-top:6px;
+    }
+
+    .insight-double{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    .insight-body{padding:16px 20px;}
+
+    .machine-badge{
+      background:#eef5ea;
+      color:#2e6d2f;
+      padding:8px 18px;
+      border-radius:36px;
+      font-weight:600;
+      font-size:14px;
+      display:inline-block;
+      border-left:3px solid #4caf50;
+    }
+
+    .storage-metrics{display:flex;gap:14px;flex-wrap:wrap;}
+
+    .storage-block{
+      flex:1;
+      min-width:130px;
+      background:#faf7f2;
+      padding:12px 14px;
+      border-radius:20px;
+      border:1px solid #eee2d4;
+    }
+
+    .storage-label{
+      font-size:10px;
+      text-transform:uppercase;
+      font-weight:600;
+      color:#9f8e79;
+      margin-bottom:5px;
+    }
+
+    .storage-number{
+      font-size:24px;
+      font-weight:800;
+      color:#2f522f;
+    }
+
+    .status-full-text{color:#d54d2e!important;}
+    .status-available-text{color:#2b7f3b!important;}
+
+    .latest-detail-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:12px;
+      background:#faf7f2;
+      padding:12px 14px;
+      border-radius:18px;
+    }
+
+    .detail-item{flex:1;min-width:100px;}
+
+    .detail-label{
+      font-size:10px;
+      text-transform:uppercase;
+      font-weight:600;
+      color:#9a8977;
+      margin-bottom:4px;
+    }
+
+    .detail-value{
+      font-size:13px;
+      font-weight:600;
+      color:#2d3d2b;
+    }
+
+    .accepted{color:#2a7a2a;font-weight:700;}
+    .rejected{color:#c94f2c;font-weight:700;}
+
+    table{width:100%;border-collapse:collapse;}
+
+    th{
+      padding:12px 18px;
+      text-align:left;
+      font-size:12px;
+      font-weight:600;
+      background:#fff;
+      color:#6d5d4c;
+      border-bottom:1px solid #ece1d4;
+    }
+
+    td{
+      padding:12px 18px;
+      border-bottom:1px solid #f1e8dd;
+      font-size:13px;
+    }
+
+    tr:hover td{background:#fcfaf6;}
+
+    .footer{
+      margin-top:24px;
+      text-align:center;
+      font-size:11px;
+      color:#9e8d78;
+    }
+
+    .loading-screen{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100vh;
+      background:linear-gradient(135deg,#f7f3ec,#ebe3d4);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      z-index:9999;
+    }
+
+    .loader{
+      width:42px;height:42px;
+      border:5px solid #ddd;
+      border-top:5px solid #2f6d2f;
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+    }
+
+    .loading-text{
+      margin-top:14px;
+      font-size:13px;
+      font-weight:600;
+      color:#2f5230;
+    }
+
+    @keyframes spin{
+      0%{transform:rotate(0deg);}
+      100%{transform:rotate(360deg);}
+    }
+
+    @media(max-width:900px){
+      .header{flex-direction:column;gap:14px;}
+      .insight-double{grid-template-columns:1fr;}
+      .header-left{flex-direction:column;text-align:center;}
+      .kpi-value{font-size:30px;}
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+  <div class="header">
+    <div class="header-left">
+      <img class="logo" src="logo.png" alt="KaPi-Noy">
+
+      <div class="header-text">
+        <h1>KaPi-Noy Admin Console</h1>
+        <p>Coffee Vendo + Smart Bottle Recycling Monitoring</p>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="live-badge">● LIVE SYSTEM</div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Accepted</div>
+      <div class="kpi-value" id="totalCollected">0</div>
+      <div class="kpi-sub">Successful bottle insertions</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Total Rejected</div>
+      <div class="kpi-value" id="totalRejected">0</div>
+      <div class="kpi-sub">Invalid / metal detected</div>
+    </div>
+  </div>
+
+  <div class="tracking-section">
+    <div class="section-title">
+      <h3>Bottle Collection Summary</h3>
+    </div>
+
+    <div class="tracking-grid">
+      <div class="track-card">
+        <div class="track-size">Accepted</div>
+        <div class="track-count" id="generalAccepted">0</div>
+        <div class="track-label">total bottles collected</div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-size">Rejected</div>
+        <div class="track-count" id="generalRejected">0</div>
+        <div class="track-label">invalid / metal detected</div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-size">Total Attempts</div>
+        <div class="track-count" id="totalAttempts">0</div>
+        <div class="track-label">accepted + rejected</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-double">
+    <div class="insight-card">
+      <div class="insight-header">
+        <h3>Machine Operational Status</h3>
+      </div>
+
+      <div class="insight-body">
+        <div class="machine-badge" id="machineStatusText">SYSTEM READY</div>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-header">
+        <h3>Storage & Capacity</h3>
+      </div>
+
+      <div class="insight-body">
+        <div class="storage-metrics">
+          <div class="storage-block">
+            <div class="storage-label">Bin Status</div>
+            <div class="storage-number">
+              <span id="storageStatusValue">AVAILABLE</span>
+            </div>
+          </div>
+
+          <div class="storage-block">
+            <div class="storage-label">Distance Sensor</div>
+            <div class="storage-number">
+              <span id="storageDistanceCm">0</span>
+              <span style="font-size:14px;">cm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-card" style="margin-bottom:24px;">
+    <div class="insight-header">
+      <h3>Latest Transaction</h3>
+    </div>
+
+    <div class="insight-body">
+      <div id="latestStatusBadge" class="machine-badge">—</div>
+
+      <div class="latest-detail-row">
+        <div class="detail-item">
+          <div class="detail-label">Weight</div>
+          <div class="detail-value" id="latestWeight">—</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-label">Metal</div>
+          <div class="detail-value" id="latestMetal">—</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-label">Date</div>
+          <div class="detail-value" id="latestTime">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="history-section">
+    <div class="section-title">
+      <h3>Transaction History Log</h3>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Transaction No.</th>
+          <th>Status</th>
+          <th>Weight</th>
+          <th>Metal</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody id="transactionTableBody">
+        <tr>
+          <td colspan="5" style="text-align:center; padding:32px;">
+            Loading transaction data...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    KaPi-Noy Smart Waste Intelligence | Real-time Monitoring System
+  </div>
+
+</div>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loader"></div>
+  <div class="loading-text">Logging out...</div>
+</div>
+
+<script type="module">
+  if(localStorage.getItem("kapinoyLoggedIn") !== "true"){
+    window.location.href = "login.html";
+  }
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPNHUQkBMG2tcVOuBDEaLyZ3TdrAXOBn0",
+    authDomain: "kapi-noy.firebaseapp.com",
+    databaseURL: "https://kapi-noy-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "kapi-noy",
+    storageBucket: "kapi-noy.firebasestorage.app",
+    messagingSenderId: "1066533707019",
+    appId: "1:1066533707019:web:d7a14aceac30094c94d60e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const machineRef = ref(db, "plastic_machine");
+
+  function formatMillis(ms){
+    if(ms === undefined || ms === null) return "—";
+
+    const date = new Date(ms);
+
+    if(isNaN(date.getTime())) return "—";
+
+    return date.toLocaleString('en-PH', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  }
+
+  onValue(machineRef, (snapshot) => {
+    const data = snapshot.val();
+
+    if(!data){
+      document.getElementById("transactionTableBody").innerHTML =
+      `<tr><td colspan="5" style="text-align:center; padding:32px;">No Firebase data found</td></tr>`;
+      return;
+    }
+
+    const acceptedTotal = data.total_collected ?? 0;
+    const rejectedTotal = data.total_rejected ?? 0;
+
+    document.getElementById("totalCollected").innerText = acceptedTotal;
+    document.getElementById("totalRejected").innerText = rejectedTotal;
+
+    document.getElementById("generalAccepted").innerText = acceptedTotal;
+    document.getElementById("generalRejected").innerText = rejectedTotal;
+    document.getElementById("totalAttempts").innerText = acceptedTotal + rejectedTotal;
+
+
+    const machineEl = document.getElementById("machineStatusText");
+    const machineStatus = data.machine_status ?? "READY";
+    machineEl.innerText = machineStatus;
+
+    if(machineStatus.toUpperCase().includes("ERROR") || machineStatus.toUpperCase().includes("FULL")){
+      machineEl.style.background = "#fbeae5";
+      machineEl.style.color = "#bc4e2c";
+      machineEl.style.borderLeftColor = "#bc4e2c";
+    } else {
+      machineEl.style.background = "#eef5ea";
+      machineEl.style.color = "#2e6d2f";
+      machineEl.style.borderLeftColor = "#4caf50";
+    }
+
+    const storageSpan = document.getElementById("storageStatusValue");
+    const storageStatus = data.storage_status ?? "AVAILABLE";
+    storageSpan.innerText = storageStatus;
+
+    storageSpan.classList.remove("status-full-text","status-available-text");
+
+    if(storageStatus.toUpperCase() === "FULL"){
+      storageSpan.classList.add("status-full-text");
+    } else {
+      storageSpan.classList.add("status-available-text");
+    }
+
+    document.getElementById("storageDistanceCm").innerText =
+      data.storage_distance_cm ?? 0;
+
+    if(data.latest_transaction){
+      const lt = data.latest_transaction;
+      const statusText = lt.status ?? "PENDING";
+      const isAccepted = statusText.toUpperCase().includes("ACCEPT");
+
+      document.getElementById("latestStatusBadge").innerHTML =
+        `<span class="${isAccepted ? "accepted" : "rejected"}">${statusText}</span>`;
+
+      document.getElementById("latestWeight").innerText =
+        lt.weight !== undefined ? `${lt.weight} g` : "—";
+      document.getElementById("latestMetal").innerText = lt.metal_detected ?? "—";
+      document.getElementById("latestTime").innerText = formatMillis(lt.millis_time);
+    }
+
+    const tbody = document.getElementById("transactionTableBody");
+    tbody.innerHTML = "";
+
+    if(data.transactions && typeof data.transactions === "object"){
+      const transactionsArr = Object.values(data.transactions);
+
+      transactionsArr.sort((a,b) => {
+        return (b.transaction_no ?? 0) - (a.transaction_no ?? 0);
+      });
+
+      if(transactionsArr.length === 0){
+        tbody.innerHTML =
+        `<tr><td colspan="5" style="text-align:center; padding:28px;">No transactions recorded</td></tr>`;
+      } else {
+        for(const tx of transactionsArr){
+          const status = tx.status ?? "—";
+          const isAccepted = status.toUpperCase().includes("ACCEPT");
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${tx.transaction_no ?? "—"}</td>
+            <td><span class="${isAccepted ? "accepted" : "rejected"}">${status}</span></td>
+            <td>${tx.weight !== undefined ? tx.weight + " g" : "—"}</td>
+            <td>${tx.metal_detected ?? "—"}</td>
+            <td>${formatMillis(tx.millis_time)}</td>
+          `;
+
+          tbody.appendChild(row);
+        }
+      }
+    } else {
+      tbody.innerHTML =
+      `<tr><td colspan="5" style="text-align:center; padding:28px;">Waiting for transaction data...</td></tr>`;
+    }
+
+  }, (error) => {
+    console.error(error);
+    document.getElementById("transactionTableBody").innerHTML =
+    `<tr><td colspan="5" style="text-align:center; padding:28px; color:#c94f2c;">Firebase sync error. Check database rules or internet.</td></tr>`;
+  });
+
+  window.logout = function(){
+    document.getElementById("loadingScreen").style.display = "flex";
+    localStorage.removeItem("kapinoyLoggedIn");
+
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 2000);
+
+  };
+</script>
+
+</body>
+</html>
