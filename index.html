@@ -4,316 +4,56 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>KaPi-Noy | Smart Dashboard</title>
-
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-
-    body{
-      background:linear-gradient(135deg,#f7f3ec,#ebe3d4);
-      font-family:'Inter','Segoe UI',Arial,sans-serif;
-      padding:28px;
-      color:#1f2a2a;
-      min-height:100vh;
-    }
-
-    .dashboard-container{max-width:1800px;margin:auto;}
-
-    .header{
-      background:rgba(255,255,255,0.75);
-      backdrop-filter:blur(18px);
-      border-radius:28px;
-      padding:16px 28px;
-      margin-bottom:28px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      box-shadow:0 6px 20px rgba(0,0,0,0.04);
-      border:1px solid rgba(255,255,255,0.5);
-    }
-
-    .header-left{display:flex;align-items:center;gap:18px;}
-
-    .logo{
-      width:56px;height:56px;border-radius:50%;
-      object-fit:cover;border:2px solid #d7c8b7;
-      background:#fff;
-    }
-
-    .header-text h1{font-size:20px;font-weight:700;color:#2d472c;margin-bottom:3px;}
-    .header-text p{font-size:11px;color:#756551;}
-
-    .header-right{display:flex;align-items:center;gap:12px;}
-
-    .live-badge{
-      background:#e7f7ea;color:#1f7a33;
-      padding:6px 14px;border-radius:40px;
-      font-size:10px;font-weight:600;
-      animation:pulse 1.5s infinite;
-    }
-
-    @keyframes pulse{
-      0%{opacity:1;}
-      50%{opacity:.6;}
-      100%{opacity:1;}
-    }
-
-    .logout-btn{
-      background:linear-gradient(135deg,#c84d37,#9f2d1b);
-      color:white;border:none;padding:7px 18px;
-      border-radius:32px;font-size:11px;font-weight:600;
-      cursor:pointer;
-    }
-
-    .kpi-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:16px;
-      margin-bottom:24px;
-    }
-
-    .kpi-card,.insight-card,.tracking-section,.history-section{
-      background:rgba(255,255,255,0.78);
-      backdrop-filter:blur(12px);
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,0.45);
-      box-shadow:0 6px 16px rgba(0,0,0,0.03);
-      overflow:hidden;
-    }
-
-    .kpi-card{padding:24px 26px;}
-
-    .kpi-label{
-      font-size:12px;text-transform:uppercase;
-      font-weight:700;color:#7a6a58;margin-bottom:10px;
-    }
-
-    .kpi-value{
-      font-size:48px;font-weight:800;color:#234122;line-height:1;
-    }
-
-    .kpi-sub{
-      margin-top:10px;padding-top:8px;
-      border-top:1px solid #ece3d8;
-      font-size:11px;color:#8c7a68;
-    }
-
-    .section-title,.insight-header{
-      padding:12px 22px;
-      background:#f9f5ef;
-      border-bottom:1px solid #ece1d4;
-    }
-
-    .section-title h3,.insight-header h3{
-      font-size:15px;
-      font-weight:600;
-      color:#3b4a38;
-    }
-
-    .tracking-section{margin-bottom:24px;}
-
-    .tracking-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-      gap:14px;
-      padding:18px 20px;
-    }
-
-    .track-card{
-      background:#faf7f2;
-      border-radius:20px;
-      padding:14px 12px;
-      text-align:center;
-      border:1px solid #eee2d4;
-    }
-
-    .track-size{
-      font-size:30px;
-      font-weight:800;
-      color:#2f522f;
-      margin-bottom:6px;
-    }
-
-    .track-count{
-      font-size:44px;
-      font-weight:800;
-      color:#234122;
-      line-height:1;
-    }
-
-    .track-label{
-      font-size:10px;
-      text-transform:uppercase;
-      font-weight:600;
-      color:#8c7a68;
-      margin-top:6px;
-    }
-
-    .insight-double{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:18px;
-      margin-bottom:24px;
-    }
-
-    .insight-body{padding:16px 20px;}
-
-    .machine-badge{
-      background:#eef5ea;
-      color:#2e6d2f;
-      padding:8px 18px;
-      border-radius:36px;
-      font-weight:600;
-      font-size:14px;
-      display:inline-block;
-      border-left:3px solid #4caf50;
-    }
-
-    .storage-metrics{display:flex;gap:14px;flex-wrap:wrap;}
-
-    .storage-block{
-      flex:1;
-      min-width:130px;
-      background:#faf7f2;
-      padding:12px 14px;
-      border-radius:20px;
-      border:1px solid #eee2d4;
-    }
-
-    .storage-label{
-      font-size:10px;
-      text-transform:uppercase;
-      font-weight:600;
-      color:#9f8e79;
-      margin-bottom:5px;
-    }
-
-    .storage-number{
-      font-size:24px;
-      font-weight:800;
-      color:#2f522f;
-    }
-
-    .status-full-text{color:#d54d2e!important;}
-    .status-available-text{color:#2b7f3b!important;}
-
-    .latest-detail-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:12px;
-      background:#faf7f2;
-      padding:12px 14px;
-      border-radius:18px;
-    }
-
-    .detail-item{flex:1;min-width:100px;}
-
-    .detail-label{
-      font-size:10px;
-      text-transform:uppercase;
-      font-weight:600;
-      color:#9a8977;
-      margin-bottom:4px;
-    }
-
-    .detail-value{
-      font-size:13px;
-      font-weight:600;
-      color:#2d3d2b;
-    }
-
-    .accepted{color:#2a7a2a;font-weight:700;}
-    .rejected{color:#c94f2c;font-weight:700;}
-
-    table{width:100%;border-collapse:collapse;}
-
-    th{
-      padding:12px 18px;
-      text-align:left;
-      font-size:12px;
-      font-weight:600;
-      background:#fff;
-      color:#6d5d4c;
-      border-bottom:1px solid #ece1d4;
-    }
-
-    td{
-      padding:12px 18px;
-      border-bottom:1px solid #f1e8dd;
-      font-size:13px;
-    }
-
-    tr:hover td{background:#fcfaf6;}
-
-    .footer{
-      margin-top:24px;
-      text-align:center;
-      font-size:11px;
-      color:#9e8d78;
-    }
-
-    .loading-screen{
-      position:fixed;
-      inset:0;
-      width:100%;
-      height:100vh;
-      background:linear-gradient(135deg,#f7f3ec,#ebe3d4);
-      display:none;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-      z-index:9999;
-    }
-
-    .loader{
-      width:42px;height:42px;
-      border:5px solid #ddd;
-      border-top:5px solid #2f6d2f;
-      border-radius:50%;
-      animation:spin 1s linear infinite;
-    }
-
-    .loading-text{
-      margin-top:14px;
-      font-size:13px;
-      font-weight:600;
-      color:#2f5230;
-    }
-
-    @keyframes spin{
-      0%{transform:rotate(0deg);}
-      100%{transform:rotate(360deg);}
-    }
-
-    @media(max-width:900px){
-      .header{flex-direction:column;gap:14px;}
-      .insight-double{grid-template-columns:1fr;}
-      .header-left{flex-direction:column;text-align:center;}
-      .kpi-value{font-size:30px;}
-    }
-  </style>
+  <link rel="icon" type="image/png" href="name.png" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-
 <body>
+
+  <!-- ===== FLOATING BACKGROUND ===== -->
+  <div class="floating-bg">
+    <div class="float-item">☕</div>
+    <div class="float-item">🫘</div>
+    <div class="float-item">☕</div>
+    <div class="float-item">🫘</div>
+    <div class="float-item">☕</div>
+    <div class="float-item">🫘</div>
+    <div class="float-item">☕</div>
+    <div class="float-item">🫘</div>
+    <div class="float-item">☕</div>
+    <div class="float-item">🫘</div>
+    <div class="float-item">🌱</div>
+    <div class="float-item">🌿</div>
+    <div class="float-item">🌱</div>
+    <div class="float-item">🌿</div>
+    <div class="float-item">🌱</div>
+    <div class="steam"></div>
+    <div class="steam"></div>
+    <div class="steam"></div>
+    <div class="steam"></div>
+    <div class="steam"></div>
+  </div>
 
 <div class="dashboard-container">
 
+  <!-- ===== HEADER ===== -->
   <div class="header">
     <div class="header-left">
       <img class="logo" src="logo.png" alt="KaPi-Noy">
-
       <div class="header-text">
         <h1>KaPi-Noy Admin Console</h1>
-        <p>Coffee Vendo + Smart Bottle Recycling Monitoring</p>
+        <p>Coffee Vendo &amp; Smart Bottle Recycling Monitoring</p>
       </div>
     </div>
 
     <div class="header-right">
-      <div class="live-badge">● LIVE SYSTEM</div>
+      <div class="live-badge" id="liveBadge">Live System</div>
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
 
+  <!-- ===== KPI GRID ===== -->
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-label">Total Accepted</div>
@@ -328,6 +68,7 @@
     </div>
   </div>
 
+  <!-- ===== TRACKING SECTION ===== -->
   <div class="tracking-section">
     <div class="section-title">
       <h3>Bottle Collection Summary</h3>
@@ -354,50 +95,127 @@
     </div>
   </div>
 
+  <!-- ===== BOTTLE SIZE INVENTORY ===== -->
+  <div class="inventory-section">
+    <div class="section-title">
+      <h3>Bottle Size Inventory</h3>
+    </div>
+    <div class="inventory-grid">
+      <div class="inventory-item">
+        <div class="size-label">230mL</div>
+        <div class="size-count" id="inv230">0</div>
+        <div class="size-sub">collected</div>
+      </div>
+      <div class="inventory-item">
+        <div class="size-label">250mL</div>
+        <div class="size-count" id="inv250">0</div>
+        <div class="size-sub">collected</div>
+      </div>
+      <div class="inventory-item">
+        <div class="size-label">290mL</div>
+        <div class="size-count" id="inv290">0</div>
+        <div class="size-sub">collected</div>
+      </div>
+      <div class="inventory-item">
+        <div class="size-label">320mL</div>
+        <div class="size-count" id="inv320">0</div>
+        <div class="size-sub">collected</div>
+      </div>
+      <div class="inventory-item">
+        <div class="size-label">335mL</div>
+        <div class="size-count" id="inv335">0</div>
+        <div class="size-sub">collected</div>
+      </div>
+      <div class="inventory-item">
+        <div class="size-label">350mL</div>
+        <div class="size-count" id="inv350">0</div>
+        <div class="size-sub">collected</div>
+      </div>
+      <div class="inventory-item">
+        <div class="size-label">500mL</div>
+        <div class="size-count" id="inv500">0</div>
+        <div class="size-sub">collected</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== INSIGHT DOUBLE ===== -->
   <div class="insight-double">
     <div class="insight-card">
       <div class="insight-header">
         <h3>Machine Operational Status</h3>
       </div>
-
       <div class="insight-body">
-        <div class="machine-badge" id="machineStatusText">SYSTEM READY</div>
+        <div class="machine-status-wrapper">
+          <div class="machine-badge status-ready" id="machineStatusText">SYSTEM READY</div>
+          
+          <div class="machine-details">
+            <div class="machine-detail-item">
+              <span class="label">Database</span>
+              <span class="value online" id="dbStatus">Connected</span>
+            </div>
+            <div class="machine-detail-item">
+              <span class="label">Date/Time</span>
+              <span class="value online" id="timeStatus">Connected</span>
+            </div>
+            <div class="machine-detail-item">
+              <span class="label">Bottle Size</span>
+              <span class="value" id="bottleSize">—</span>
+            </div>
+            <div class="machine-detail-item">
+              <span class="label">Weight</span>
+              <span class="value" id="currentWeight">—</span>
+            </div>
+            <div class="machine-detail-item" style="grid-column:1/-1; border-bottom:none; justify-content:center; gap:12px; padding:6px 0;">
+              <span class="label">Result:</span>
+              <span class="value" id="resultStatus" style="font-size:14px;">—</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="insight-card">
       <div class="insight-header">
-        <h3>Storage & Capacity</h3>
+        <h3>Storage &amp; Capacity</h3>
       </div>
-
       <div class="insight-body">
-        <div class="storage-metrics">
-          <div class="storage-block">
-            <div class="storage-label">Bin Status</div>
-            <div class="storage-number">
-              <span id="storageStatusValue">AVAILABLE</span>
+        <div class="storage-combined">
+          <div class="storage-row">
+            <span class="storage-label">Bin Status</span>
+            <span class="storage-value available" id="storageStatusValue">AVAILABLE</span>
+          </div>
+
+          <div class="storage-row">
+            <span class="storage-label">Storage Level</span>
+            <span class="storage-value" id="fillPercentage">0%</span>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressFill" style="width:0%;"></div>
+            </div>
+            <div class="progress-label">
+              <span id="fillStatus">Plenty of Space</span>
+              <span id="fillPercentLabel">0%</span>
             </div>
           </div>
 
-          <div class="storage-block">
-            <div class="storage-label">Distance Sensor</div>
-            <div class="storage-number">
-              <span id="storageDistanceCm">0</span>
-              <span style="font-size:14px;">cm</span>
-            </div>
+          <div class="storage-alert success" id="storageAlert">
+            Plenty of Space Available
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ===== LATEST TRANSACTION ===== -->
   <div class="insight-card" style="margin-bottom:24px;">
     <div class="insight-header">
       <h3>Latest Transaction</h3>
     </div>
-
     <div class="insight-body">
-      <div id="latestStatusBadge" class="machine-badge">—</div>
+      <div id="latestStatusBadge" class="machine-badge status-ready">—</div>
 
       <div class="latest-detail-row">
         <div class="detail-item">
@@ -418,45 +236,69 @@
     </div>
   </div>
 
+  <!-- ===== TRANSACTION HISTORY ===== -->
   <div class="history-section">
-    <div class="section-title">
+    <div class="transaction-header">
       <h3>Transaction History Log</h3>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search transactions..." oninput="applySearch()">
+      </div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Transaction No.</th>
-          <th>Status</th>
-          <th>Weight</th>
-          <th>Metal</th>
-          <th>Date</th>
-        </tr>
-      </thead>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Transaction No.</th>
+            <th>Status</th>
+            <th>Bottle Size</th>
+            <th>Weight</th>
+            <th>Metal</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="transactionTableBody">
+          <tr>
+            <td colspan="6" style="text-align:center; padding:32px; color:#8c7a68;">
+              Loading transaction data...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-      <tbody id="transactionTableBody">
-        <tr>
-          <td colspan="5" style="text-align:center; padding:32px;">
-            Loading transaction data...
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="pagination-wrapper">
+      <div class="pagination-controls">
+        <button id="prevPage" onclick="changePage(-1)">Previous</button>
+        <span class="page-info" id="pageInfo">Page 1 of 1</span>
+        <button id="nextPage" onclick="changePage(1)">Next</button>
+        <select id="entriesPerPage" onchange="changeEntriesPerPage()">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <span class="per-page-label">per page</span>
+      </div>
+    </div>
   </div>
 
+  <!-- ===== FOOTER ===== -->
   <div class="footer">
-    KaPi-Noy Smart Waste Intelligence | Real-time Monitoring System
+    KaPi-Noy Smart Waste Intelligence · Real-time Monitoring System
   </div>
 
 </div>
 
+<!-- ===== LOADING ===== -->
 <div class="loading-screen" id="loadingScreen">
   <div class="loader"></div>
   <div class="loading-text">Logging out...</div>
 </div>
 
+<!-- ===== FIREBASE & PAGINATION ===== -->
 <script type="module">
-  if(localStorage.getItem("kapinoyLoggedIn") !== "true"){
+  if(localStorage.getItem("kapinoyLoggedIn") !== "true") {
     window.location.href = "login.html";
   }
 
@@ -476,31 +318,153 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
   const machineRef = ref(db, "plastic_machine");
+  const MAX_CM = 50;
 
-  function formatMillis(ms){
-    if(ms === undefined || ms === null) return "—";
+  let allTransactions = [];
+  let filteredTransactions = [];
+  let currentPage = 1;
+  let entriesPerPage = 10;
 
+  // ===== OFFLINE DETECTION =====
+  const liveBadge = document.getElementById('liveBadge');
+  let isOnline = false;
+  let timeoutId = null;
+
+  function setOffline() {
+    isOnline = false;
+    liveBadge.className = 'live-badge offline';
+    liveBadge.textContent = 'Offline';
+  }
+
+  function setOnline() {
+    isOnline = true;
+    liveBadge.className = 'live-badge online';
+    liveBadge.textContent = 'Live';
+  }
+
+  function resetOfflineTimer() {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      if (!isOnline) return;
+      setOffline();
+      console.log('⚠️ Device went OFFLINE (timeout)');
+    }, 15000);
+  }
+
+  function formatMillis(ms) {
+    if (ms === undefined || ms === null) return "—";
     const date = new Date(ms);
-
-    if(isNaN(date.getTime())) return "—";
-
+    if (isNaN(date.getTime())) return "—";
     return date.toLocaleString('en-PH', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour: 'numeric',
+      hour: '2-digit',
       minute: '2-digit'
     });
   }
 
+  function renderTable() {
+    const tbody = document.getElementById("transactionTableBody");
+    const start = (currentPage - 1) * entriesPerPage;
+    const end = Math.min(start + entriesPerPage, filteredTransactions.length);
+    const pageData = filteredTransactions.slice(start, end);
+
+    if (pageData.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:28px; color:#8c7a68;">No transactions found</td></tr>`;
+    } else {
+      tbody.innerHTML = "";
+      for (const tx of pageData) {
+        const status = tx.status ?? "—";
+        let cls = "pending";
+        if (status.toUpperCase().includes("ACCEPT")) cls = "accepted";
+        else if (status.toUpperCase().includes("REJECT")) cls = "rejected";
+
+        const metalVal = tx.metal_detected ?? "—";
+        const metalClass = metalVal.toUpperCase().includes("YES") ? "tx-metal yes" : "tx-metal no";
+        const bottleSize = tx.bottle_size ?? "—";
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><span class="tx-number">${tx.transaction_no ?? "—"}</span></td>
+          <td><span class="status-badge ${cls}">${status}</span></td>
+          <td><span class="tx-weight">${bottleSize}</span></td>
+          <td><span class="tx-weight">${tx.weight !== undefined ? tx.weight + " g" : "—"}</span></td>
+          <td><span class="${metalClass}">${metalVal}</span></td>
+          <td><span class="tx-date">${formatMillis(tx.millis_time)}</span></td>
+        `;
+        tbody.appendChild(row);
+      }
+    }
+
+    const totalPages = Math.ceil(filteredTransactions.length / entriesPerPage) || 1;
+    document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+    document.getElementById("prevPage").disabled = currentPage <= 1;
+    document.getElementById("nextPage").disabled = currentPage >= totalPages;
+  }
+
+  window.applySearch = function() {
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+      filteredTransactions = [...allTransactions];
+    } else {
+      filteredTransactions = allTransactions.filter(tx => {
+        const dateStr = formatMillis(tx.millis_time).toLowerCase();
+        const weightStr = tx.weight !== undefined ? tx.weight.toString() : "";
+        const statusStr = (tx.status ?? "").toLowerCase();
+        const sizeStr = (tx.bottle_size ?? "").toLowerCase();
+        const metalStr = (tx.metal_detected ?? "").toLowerCase();
+        const noStr = (tx.transaction_no ?? "").toString();
+        
+        return dateStr.includes(searchTerm) ||
+               weightStr.includes(searchTerm) ||
+               statusStr.includes(searchTerm) ||
+               sizeStr.includes(searchTerm) ||
+               metalStr.includes(searchTerm) ||
+               noStr.includes(searchTerm);
+      });
+    }
+    
+    currentPage = 1;
+    renderTable();
+  };
+
+  window.changePage = function(delta) {
+    const totalPages = Math.ceil(filteredTransactions.length / entriesPerPage) || 1;
+    const newPage = currentPage + delta;
+    if (newPage >= 1 && newPage <= totalPages) {
+      currentPage = newPage;
+      renderTable();
+    }
+  };
+
+  window.changeEntriesPerPage = function() {
+    entriesPerPage = parseInt(document.getElementById("entriesPerPage").value);
+    currentPage = 1;
+    renderTable();
+  };
+
+  // Start with offline
+  setOffline();
+
   onValue(machineRef, (snapshot) => {
     const data = snapshot.val();
 
-    if(!data){
+    // Reset timer on every data receive
+    resetOfflineTimer();
+
+    if (!data) {
+      setOffline();
       document.getElementById("transactionTableBody").innerHTML =
-      `<tr><td colspan="5" style="text-align:center; padding:32px;">No Firebase data found</td></tr>`;
+        `<tr><td colspan="6" style="text-align:center; padding:32px; color:#8c7a68;">No Firebase data found</td></tr>`;
       return;
     }
+
+    // If we have data, set online
+    setOnline();
 
     const acceptedTotal = data.total_collected ?? 0;
     const rejectedTotal = data.total_rejected ?? 0;
@@ -512,43 +476,182 @@
     document.getElementById("generalRejected").innerText = rejectedTotal;
     document.getElementById("totalAttempts").innerText = acceptedTotal + rejectedTotal;
 
+    document.getElementById("inv230").innerText = data.total_230ml ?? 0;
+    document.getElementById("inv250").innerText = data.total_250ml ?? 0;
+    document.getElementById("inv290").innerText = data.total_290ml ?? 0;
+    document.getElementById("inv320").innerText = data.total_320ml ?? 0;
+    document.getElementById("inv335").innerText = data.total_335ml ?? 0;
+    document.getElementById("inv350").innerText = data.total_350ml ?? 0;
+    document.getElementById("inv500").innerText = data.total_500ml ?? 0;
 
+    // ===== MACHINE STATUS =====
     const machineEl = document.getElementById("machineStatusText");
     const machineStatus = data.machine_status ?? "READY";
-    machineEl.innerText = machineStatus;
-
-    if(machineStatus.toUpperCase().includes("ERROR") || machineStatus.toUpperCase().includes("FULL")){
-      machineEl.style.background = "#fbeae5";
-      machineEl.style.color = "#bc4e2c";
-      machineEl.style.borderLeftColor = "#bc4e2c";
-    } else {
-      machineEl.style.background = "#eef5ea";
-      machineEl.style.color = "#2e6d2f";
-      machineEl.style.borderLeftColor = "#4caf50";
+    
+    let displayStatus = machineStatus;
+    let statusClass = "status-ready";
+    let resultText = "—";
+    let resultClass = "";
+    
+    // Check if machine_status is explicitly OFFLINE
+    if (machineStatus.toUpperCase() === 'OFFLINE') {
+      setOffline();
+      machineEl.innerText = "OFFLINE";
+      machineEl.className = "machine-badge status-offline";
+      document.getElementById("dbStatus").innerText = "Disconnected";
+      document.getElementById("dbStatus").className = "value offline";
+      document.getElementById("timeStatus").innerText = "Disconnected";
+      document.getElementById("timeStatus").className = "value offline";
+      document.getElementById("bottleSize").innerText = "—";
+      document.getElementById("currentWeight").innerText = "—";
+      document.getElementById("resultStatus").innerText = "⚠️ Device Offline";
+      document.getElementById("resultStatus").className = "value rejected";
+      return;
     }
 
-    const storageSpan = document.getElementById("storageStatusValue");
+    if (data.latest_transaction) {
+      const txStatus = data.latest_transaction.status ?? "PENDING";
+      displayStatus = txStatus;
+      
+      if (txStatus.toUpperCase().includes("ACCEPT")) {
+        statusClass = "status-accepted";
+        resultText = "ACCEPTED";
+        resultClass = "accepted";
+      } else if (txStatus.toUpperCase().includes("REJECT")) {
+        statusClass = "status-rejected";
+        resultText = "REJECTED";
+        resultClass = "rejected";
+      } else if (txStatus.toUpperCase().includes("METAL")) {
+        statusClass = "status-rejected";
+        resultText = "METAL DETECTED";
+        resultClass = "rejected";
+      } else if (txStatus.toUpperCase().includes("STABILIZING")) {
+        statusClass = "status-stabilizing";
+        resultText = "Stabilizing Weight...";
+        resultClass = "";
+      } else if (txStatus.toUpperCase().includes("ERROR")) {
+        statusClass = "status-error";
+        resultText = "ERROR";
+        resultClass = "rejected";
+      } else {
+        statusClass = "status-pending";
+        resultText = "PENDING";
+        resultClass = "";
+      }
+    } else {
+      if (machineStatus.toUpperCase().includes("ERROR")) {
+        statusClass = "status-error";
+        resultText = "ERROR";
+        resultClass = "rejected";
+      } else if (machineStatus.toUpperCase().includes("FULL")) {
+        statusClass = "status-error";
+        resultText = "STORAGE FULL";
+        resultClass = "rejected";
+      } else if (machineStatus.toUpperCase().includes("READY")) {
+        statusClass = "status-ready";
+        resultText = "SYSTEM READY";
+        resultClass = "accepted";
+      } else if (machineStatus.toUpperCase().includes("WAITING")) {
+        statusClass = "status-pending";
+        resultText = "WAITING FOR BOTTLE";
+        resultClass = "";
+      } else {
+        statusClass = "status-ready";
+        resultText = machineStatus;
+        resultClass = "accepted";
+      }
+    }
+    
+    machineEl.innerText = displayStatus;
+    machineEl.className = "machine-badge " + statusClass;
+
+    document.getElementById("dbStatus").innerText = "Connected";
+    document.getElementById("dbStatus").className = "value online";
+    document.getElementById("timeStatus").innerText = "Connected";
+    document.getElementById("timeStatus").className = "value online";
+    
+    if (data.latest_transaction && data.latest_transaction.bottle_size) {
+      document.getElementById("bottleSize").innerText = data.latest_transaction.bottle_size;
+    } else {
+      document.getElementById("bottleSize").innerText = "—";
+    }
+    
+    if (data.latest_transaction && data.latest_transaction.weight !== undefined) {
+      document.getElementById("currentWeight").innerText = data.latest_transaction.weight + " g";
+    } else {
+      document.getElementById("currentWeight").innerText = "—";
+    }
+    
+    const resultEl = document.getElementById("resultStatus");
+    resultEl.innerText = resultText;
+    resultEl.className = "value " + resultClass;
+
+    // ===== STORAGE =====
     const storageStatus = data.storage_status ?? "AVAILABLE";
-    storageSpan.innerText = storageStatus;
-
-    storageSpan.classList.remove("status-full-text","status-available-text");
-
-    if(storageStatus.toUpperCase() === "FULL"){
-      storageSpan.classList.add("status-full-text");
+    const storageStatusEl = document.getElementById("storageStatusValue");
+    storageStatusEl.innerText = storageStatus;
+    
+    if (storageStatus.toUpperCase() === "FULL") {
+      storageStatusEl.className = "storage-value full";
     } else {
-      storageSpan.classList.add("status-available-text");
+      storageStatusEl.className = "storage-value available";
     }
 
-    document.getElementById("storageDistanceCm").innerText =
-      data.storage_distance_cm ?? 0;
+    const distanceCm = data.storage_distance_cm ?? 0;
+    let percentage = Math.min(100, Math.max(0, (distanceCm / MAX_CM) * 100));
+    const roundedPercentage = Math.round(percentage);
 
-    if(data.latest_transaction){
+    document.getElementById("fillPercentage").innerHTML = roundedPercentage + "%";
+    document.getElementById("fillPercentLabel").innerHTML = roundedPercentage + "%";
+
+    const progressFill = document.getElementById("progressFill");
+    progressFill.style.width = roundedPercentage + "%";
+    progressFill.classList.remove("warning", "danger");
+
+    const fillStatus = document.getElementById("fillStatus");
+    const alertEl = document.getElementById("storageAlert");
+
+    if (roundedPercentage >= 80) {
+      progressFill.classList.add("danger");
+      fillStatus.innerText = "Almost Full";
+      fillStatus.style.color = "#c62828";
+      alertEl.className = "storage-alert warning";
+      alertEl.innerHTML = "Almost Full — Need to Empty!";
+    } else if (roundedPercentage >= 60) {
+      progressFill.classList.add("warning");
+      fillStatus.innerText = "Getting Full";
+      fillStatus.style.color = "#e8a83a";
+      alertEl.className = "storage-alert warning";
+      alertEl.innerHTML = "Getting Full — Consider Emptying Soon";
+    } else if (roundedPercentage >= 30) {
+      fillStatus.innerText = "Moderate Fill";
+      fillStatus.style.color = "#4caf50";
+      alertEl.className = "storage-alert success";
+      alertEl.innerHTML = "Moderate Fill — Still Plenty of Space";
+    } else {
+      fillStatus.innerText = "Plenty of Space";
+      fillStatus.style.color = "#2b7f3b";
+      alertEl.className = "storage-alert success";
+      alertEl.innerHTML = "Plenty of Space Available";
+    }
+
+    // ===== LATEST TRANSACTION =====
+    if (data.latest_transaction) {
       const lt = data.latest_transaction;
       const statusText = lt.status ?? "PENDING";
       const isAccepted = statusText.toUpperCase().includes("ACCEPT");
+      const isRejected = statusText.toUpperCase().includes("REJECT");
 
-      document.getElementById("latestStatusBadge").innerHTML =
-        `<span class="${isAccepted ? "accepted" : "rejected"}">${statusText}</span>`;
+      const badgeEl = document.getElementById("latestStatusBadge");
+      badgeEl.innerText = statusText;
+      
+      if (isAccepted) {
+        badgeEl.className = "machine-badge status-accepted";
+      } else if (isRejected) {
+        badgeEl.className = "machine-badge status-rejected";
+      } else {
+        badgeEl.className = "machine-badge status-pending";
+      }
 
       document.getElementById("latestWeight").innerText =
         lt.weight !== undefined ? `${lt.weight} g` : "—";
@@ -556,55 +659,38 @@
       document.getElementById("latestTime").innerText = formatMillis(lt.millis_time);
     }
 
-    const tbody = document.getElementById("transactionTableBody");
-    tbody.innerHTML = "";
-
-    if(data.transactions && typeof data.transactions === "object"){
+    // ===== TRANSACTIONS =====
+    if (data.transactions && typeof data.transactions === "object") {
       const transactionsArr = Object.values(data.transactions);
-
-      transactionsArr.sort((a,b) => {
-        return (b.transaction_no ?? 0) - (a.transaction_no ?? 0);
+      transactionsArr.sort((a, b) => {
+        const aTime = a.millis_time ?? 0;
+        const bTime = b.millis_time ?? 0;
+        return bTime - aTime;
       });
-
-      if(transactionsArr.length === 0){
-        tbody.innerHTML =
-        `<tr><td colspan="5" style="text-align:center; padding:28px;">No transactions recorded</td></tr>`;
-      } else {
-        for(const tx of transactionsArr){
-          const status = tx.status ?? "—";
-          const isAccepted = status.toUpperCase().includes("ACCEPT");
-
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${tx.transaction_no ?? "—"}</td>
-            <td><span class="${isAccepted ? "accepted" : "rejected"}">${status}</span></td>
-            <td>${tx.weight !== undefined ? tx.weight + " g" : "—"}</td>
-            <td>${tx.metal_detected ?? "—"}</td>
-            <td>${formatMillis(tx.millis_time)}</td>
-          `;
-
-          tbody.appendChild(row);
-        }
-      }
+      allTransactions = transactionsArr;
+      filteredTransactions = [...allTransactions];
+      currentPage = 1;
+      renderTable();
     } else {
-      tbody.innerHTML =
-      `<tr><td colspan="5" style="text-align:center; padding:28px;">Waiting for transaction data...</td></tr>`;
+      allTransactions = [];
+      filteredTransactions = [];
+      renderTable();
     }
 
   }, (error) => {
     console.error(error);
+    setOffline();
     document.getElementById("transactionTableBody").innerHTML =
-    `<tr><td colspan="5" style="text-align:center; padding:28px; color:#c94f2c;">Firebase sync error. Check database rules or internet.</td></tr>`;
+      `<tr><td colspan="6" style="text-align:center; padding:28px; color:#c94f2c;">Sync error. Check connection.</td></tr>`;
   });
 
-  window.logout = function(){
+  window.logout = function() {
     document.getElementById("loadingScreen").style.display = "flex";
     localStorage.removeItem("kapinoyLoggedIn");
 
     setTimeout(() => {
       window.location.href = "login.html";
     }, 2000);
-
   };
 </script>
 
