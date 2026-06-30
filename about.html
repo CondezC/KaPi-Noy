@@ -639,80 +639,112 @@
       }
 
       // ===== MACHINE STATUS WITH STABILIZING LOGIC =====
-      const machineEl = document.getElementById("machineStatusText");
-      const machineStatusText = data.machine_status ?? "READY";
+const machineEl = document.getElementById("machineStatusText");
+const machineStatusText = (data.machine_status ?? "READY").toUpperCase();
 
-      let displayStatus = machineStatusText;
-      let statusClass = "status-ready";
-      let resultText = "SYSTEM READY";
-      let resultClass = "accepted";
+let displayStatus = "SYSTEM READY";
+let statusClass = "status-ready";
+let resultText = "SYSTEM READY";
+let resultClass = "accepted";
 
-      // Check for latest transaction status
-      if (data.latest_transaction) {
-        const txStatus = data.latest_transaction.status ?? "PENDING";
-        
-        // Check if it's STABILIZING - show this first
-        if (txStatus.toUpperCase().includes("STABILIZING")) {
-          statusClass = "status-stabilizing";
-          displayStatus = "STABILIZING WEIGHT...";
-          resultText = "Please Wait, Stabilizing Weight...";
-          resultClass = "";
-        } 
-        // Check if it's ACCEPTED
-        else if (txStatus.toUpperCase().includes("ACCEPT")) {
-          statusClass = "status-accepted";
-          displayStatus = "ACCEPTED ✓";
-          resultText = "ACCEPTED ✓";
-          resultClass = "accepted";
-        } 
-        // Check if it's REJECTED (including METAL)
-        else if (txStatus.toUpperCase().includes("REJECT") || txStatus.toUpperCase().includes("METAL")) {
-          statusClass = "status-rejected";
-          displayStatus = "REJECTED ✗";
-          resultText = "REJECTED ✗";
-          resultClass = "rejected";
-        } 
-        // Check for ERROR
-        else if (txStatus.toUpperCase().includes("ERROR")) {
-          statusClass = "status-error";
-          displayStatus = "ERROR";
-          resultText = "⚠️ ERROR";
-          resultClass = "rejected";
-        } 
-        // Default PENDING
-        else {
-          statusClass = "status-pending";
-          displayStatus = "PENDING...";
-          resultText = "Processing...";
-          resultClass = "";
-        }
-      } else {
-        // No transaction - show machine status
-        if (machineStatusText.toUpperCase().includes("ERROR")) {
-          statusClass = "status-error";
-          resultText = "⚠️ ERROR";
-          resultClass = "rejected";
-        } else if (machineStatusText.toUpperCase().includes("FULL")) {
-          statusClass = "status-error";
-          resultText = "⚠️ STORAGE FULL";
-          resultClass = "rejected";
-        } else if (machineStatusText.toUpperCase().includes("READY")) {
-          statusClass = "status-ready";
-          resultText = "SYSTEM READY";
-          resultClass = "accepted";
-        } else if (machineStatusText.toUpperCase().includes("WAITING")) {
-          statusClass = "status-pending";
-          resultText = "⏳ WAITING FOR BOTTLE";
-          resultClass = "";
-        } else {
-          statusClass = "status-ready";
-          resultText = machineStatusText;
-          resultClass = "accepted";
-        }
-      }
+// Latest transaction status
+const txStatus = (
+  data.latest_transaction?.status ??
+  ""
+).toUpperCase();
 
-      machineEl.innerText = displayStatus;
-      machineEl.className = "machine-badge " + statusClass;
+console.log("Machine Status:", machineStatusText);
+console.log("Transaction Status:", txStatus);
+
+// ====================================================
+// PRIORITY 1 - STABILIZING
+// ====================================================
+if (
+    machineStatusText.includes("STABILIZING") ||
+    txStatus.includes("STABILIZING")
+) {
+
+    displayStatus = "STABILIZING WEIGHT...";
+    statusClass = "status-stabilizing";
+
+    resultText = "⏳ Please Wait, Stabilizing Weight...";
+    resultClass = "";
+
+// ====================================================
+// PRIORITY 2 - ACCEPTED
+// ====================================================
+} else if (txStatus.includes("ACCEPT")) {
+
+    displayStatus = "ACCEPTED ✓";
+    statusClass = "status-accepted";
+
+    resultText = "✅ ACCEPTED";
+    resultClass = "accepted";
+
+// ====================================================
+// PRIORITY 3 - REJECTED
+// ====================================================
+} else if (
+    txStatus.includes("REJECT") ||
+    txStatus.includes("METAL")
+) {
+
+    displayStatus = "REJECTED ✗";
+    statusClass = "status-rejected";
+
+    resultText = "❌ REJECTED";
+    resultClass = "rejected";
+
+// ====================================================
+// PRIORITY 4 - ERROR
+// ====================================================
+} else if (
+    machineStatusText.includes("ERROR") ||
+    txStatus.includes("ERROR")
+) {
+
+    displayStatus = "ERROR";
+    statusClass = "status-error";
+
+    resultText = "⚠️ ERROR";
+    resultClass = "rejected";
+
+// ====================================================
+// PRIORITY 5 - STORAGE FULL
+// ====================================================
+} else if (machineStatusText.includes("FULL")) {
+
+    displayStatus = "STORAGE FULL";
+    statusClass = "status-error";
+
+    resultText = "⚠️ STORAGE FULL";
+    resultClass = "rejected";
+
+// ====================================================
+// PRIORITY 6 - WAITING
+// ====================================================
+} else if (machineStatusText.includes("WAITING")) {
+
+    displayStatus = "WAITING FOR BOTTLE";
+    statusClass = "status-pending";
+
+    resultText = "⏳ WAITING FOR BOTTLE";
+    resultClass = "";
+
+// ====================================================
+// DEFAULT - READY
+// ====================================================
+} else {
+
+    displayStatus = "SYSTEM READY";
+    statusClass = "status-ready";
+
+    resultText = "SYSTEM READY";
+    resultClass = "accepted";
+}
+
+machineEl.innerText = displayStatus;
+machineEl.className = "machine-badge " + statusClass;
 
       document.getElementById("dbStatus").innerText = "Connected";
       document.getElementById("dbStatus").className = "value online";
