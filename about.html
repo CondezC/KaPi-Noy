@@ -598,6 +598,7 @@
       document.getElementById("fillStatus").style.color = "#c62828";
       document.getElementById("storageAlert").className = "storage-alert warning";
       document.getElementById("storageAlert").innerHTML = "⚠️ Device Offline";
+      document.getElementById("progressFill").style.width = "0%";
     }
 
     function setOnline() {
@@ -637,52 +638,63 @@
         return;
       }
 
-      // ===== MACHINE STATUS =====
+      // ===== MACHINE STATUS WITH STABILIZING LOGIC =====
       const machineEl = document.getElementById("machineStatusText");
       const machineStatusText = data.machine_status ?? "READY";
 
       let displayStatus = machineStatusText;
       let statusClass = "status-ready";
-      let resultText = "—";
-      let resultClass = "";
+      let resultText = "SYSTEM READY";
+      let resultClass = "accepted";
 
+      // Check for latest transaction status
       if (data.latest_transaction) {
         const txStatus = data.latest_transaction.status ?? "PENDING";
-        displayStatus = txStatus;
-
-        if (txStatus.toUpperCase().includes("ACCEPT")) {
-          statusClass = "status-accepted";
-          resultText = "ACCEPTED";
-          resultClass = "accepted";
-        } else if (txStatus.toUpperCase().includes("REJECT")) {
-          statusClass = "status-rejected";
-          resultText = "REJECTED";
-          resultClass = "rejected";
-        } else if (txStatus.toUpperCase().includes("METAL")) {
-          statusClass = "status-rejected";
-          resultText = "METAL DETECTED";
-          resultClass = "rejected";
-        } else if (txStatus.toUpperCase().includes("STABILIZING")) {
+        
+        // Check if it's STABILIZING - show this first
+        if (txStatus.toUpperCase().includes("STABILIZING")) {
           statusClass = "status-stabilizing";
-          resultText = "Stabilizing Weight...";
+          displayStatus = "STABILIZING WEIGHT...";
+          resultText = "Please Wait, Stabilizing Weight...";
           resultClass = "";
-        } else if (txStatus.toUpperCase().includes("ERROR")) {
-          statusClass = "status-error";
-          resultText = "ERROR";
+        } 
+        // Check if it's ACCEPTED
+        else if (txStatus.toUpperCase().includes("ACCEPT")) {
+          statusClass = "status-accepted";
+          displayStatus = "ACCEPTED ✓";
+          resultText = "ACCEPTED ✓";
+          resultClass = "accepted";
+        } 
+        // Check if it's REJECTED (including METAL)
+        else if (txStatus.toUpperCase().includes("REJECT") || txStatus.toUpperCase().includes("METAL")) {
+          statusClass = "status-rejected";
+          displayStatus = "REJECTED ✗";
+          resultText = "REJECTED ✗";
           resultClass = "rejected";
-        } else {
+        } 
+        // Check for ERROR
+        else if (txStatus.toUpperCase().includes("ERROR")) {
+          statusClass = "status-error";
+          displayStatus = "ERROR";
+          resultText = "⚠️ ERROR";
+          resultClass = "rejected";
+        } 
+        // Default PENDING
+        else {
           statusClass = "status-pending";
-          resultText = "PENDING";
+          displayStatus = "PENDING...";
+          resultText = "Processing...";
           resultClass = "";
         }
       } else {
+        // No transaction - show machine status
         if (machineStatusText.toUpperCase().includes("ERROR")) {
           statusClass = "status-error";
-          resultText = "ERROR";
+          resultText = "⚠️ ERROR";
           resultClass = "rejected";
         } else if (machineStatusText.toUpperCase().includes("FULL")) {
           statusClass = "status-error";
-          resultText = "STORAGE FULL";
+          resultText = "⚠️ STORAGE FULL";
           resultClass = "rejected";
         } else if (machineStatusText.toUpperCase().includes("READY")) {
           statusClass = "status-ready";
@@ -690,7 +702,7 @@
           resultClass = "accepted";
         } else if (machineStatusText.toUpperCase().includes("WAITING")) {
           statusClass = "status-pending";
-          resultText = "WAITING FOR BOTTLE";
+          resultText = "⏳ WAITING FOR BOTTLE";
           resultClass = "";
         } else {
           statusClass = "status-ready";
@@ -723,7 +735,7 @@
       resultEl.innerText = resultText;
       resultEl.className = "value " + resultClass;
 
-      // ===== STORAGE =====
+      // ===== STORAGE - CORRECTED WITH STATUS PRIORITY =====
       const storageStatus = data.storage_status ?? "AVAILABLE";
       const storageStatusEl = document.getElementById("storageStatusValue");
       storageStatusEl.innerText = storageStatus;
@@ -734,8 +746,26 @@
         storageStatusEl.className = "storage-value available";
       }
 
-      const distanceCm = data.storage_distance_cm ?? 0;
-      let percentage = Math.min(100, Math.max(0, (distanceCm / MAX_DISTANCE_CM) * 100));
+      // Get distance reading
+      let distanceCm = data.storage_distance_cm ?? 0;
+      
+      // CRITICAL FIX: If storage_status is AVAILABLE, cap the percentage at 30%
+      // This ensures AVAILABLE doesn't show as FULL
+      let percentage = 0;
+      
+      if (storageStatus.toUpperCase() === "AVAILABLE") {
+        // If status is AVAILABLE, use a fixed low percentage or calculate but cap at 30%
+        let rawPercentage = (distanceCm / MAX_DISTANCE_CM) * 100;
+        percentage = Math.min(30, Math.max(0, rawPercentage)); // MAX 30% LANG!
+      } else if (storageStatus.toUpperCase() === "FULL") {
+        // If status is FULL, show high percentage
+        let rawPercentage = (distanceCm / MAX_DISTANCE_CM) * 100;
+        percentage = Math.min(100, Math.max(70, rawPercentage)); // MIN 70%
+      } else {
+        // For other statuses, use normal calculation
+        percentage = Math.min(100, Math.max(0, (distanceCm / MAX_DISTANCE_CM) * 100));
+      }
+      
       const roundedPercentage = Math.round(percentage);
 
       document.getElementById("fillPercentage").innerHTML = roundedPercentage + "%";
