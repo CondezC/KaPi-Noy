@@ -484,14 +484,14 @@
     document.getElementById("inv350").innerText = data.total_350ml ?? 0;
     document.getElementById("inv500").innerText = data.total_500ml ?? 0;
 
-    // ===== MACHINE STATUS =====
+    // ===== MACHINE STATUS WITH STABILIZING LOGIC =====
     const machineEl = document.getElementById("machineStatusText");
     const machineStatus = data.machine_status ?? "READY";
     
     let displayStatus = machineStatus;
     let statusClass = "status-ready";
-    let resultText = "—";
-    let resultClass = "";
+    let resultText = "SYSTEM READY";
+    let resultClass = "accepted";
     
     // Check if machine_status is explicitly OFFLINE
     if (machineStatus.toUpperCase() === 'OFFLINE') {
@@ -509,43 +509,64 @@
       return;
     }
 
+    // Check for latest transaction status
     if (data.latest_transaction) {
       const txStatus = data.latest_transaction.status ?? "PENDING";
-      displayStatus = txStatus;
       
-      if (txStatus.toUpperCase().includes("ACCEPT")) {
-        statusClass = "status-accepted";
-        resultText = "ACCEPTED";
-        resultClass = "accepted";
-      } else if (txStatus.toUpperCase().includes("REJECT")) {
-        statusClass = "status-rejected";
-        resultText = "REJECTED";
-        resultClass = "rejected";
-      } else if (txStatus.toUpperCase().includes("METAL")) {
-        statusClass = "status-rejected";
-        resultText = "METAL DETECTED";
-        resultClass = "rejected";
-      } else if (txStatus.toUpperCase().includes("STABILIZING")) {
+      // Check if it's STABILIZING - show this first
+      if (txStatus.toUpperCase().includes("STABILIZING")) {
         statusClass = "status-stabilizing";
-        resultText = "Stabilizing Weight...";
+        displayStatus = "STABILIZING WEIGHT...";
+        resultText = "Please Wait, Stabilizing Weight...";
         resultClass = "";
-      } else if (txStatus.toUpperCase().includes("ERROR")) {
-        statusClass = "status-error";
-        resultText = "ERROR";
+        machineEl.innerText = displayStatus;
+        machineEl.className = "machine-badge " + statusClass;
+      } 
+      // Check if it's ACCEPTED
+      else if (txStatus.toUpperCase().includes("ACCEPT")) {
+        statusClass = "status-accepted";
+        displayStatus = "ACCEPTED ✓";
+        resultText = "ACCEPTED ✓";
+        resultClass = "accepted";
+        machineEl.innerText = displayStatus;
+        machineEl.className = "machine-badge " + statusClass;
+      } 
+      // Check if it's REJECTED (including METAL)
+      else if (txStatus.toUpperCase().includes("REJECT") || txStatus.toUpperCase().includes("METAL")) {
+        statusClass = "status-rejected";
+        displayStatus = "REJECTED ✗";
+        resultText = "REJECTED ✗";
         resultClass = "rejected";
-      } else {
+        machineEl.innerText = displayStatus;
+        machineEl.className = "machine-badge " + statusClass;
+      } 
+      // Check for ERROR
+      else if (txStatus.toUpperCase().includes("ERROR")) {
+        statusClass = "status-error";
+        displayStatus = "ERROR";
+        resultText = "⚠️ ERROR";
+        resultClass = "rejected";
+        machineEl.innerText = displayStatus;
+        machineEl.className = "machine-badge " + statusClass;
+      } 
+      // Default PENDING
+      else {
         statusClass = "status-pending";
-        resultText = "PENDING";
+        displayStatus = "PENDING...";
+        resultText = "Processing...";
         resultClass = "";
+        machineEl.innerText = displayStatus;
+        machineEl.className = "machine-badge " + statusClass;
       }
     } else {
+      // No transaction - show machine status
       if (machineStatus.toUpperCase().includes("ERROR")) {
         statusClass = "status-error";
-        resultText = "ERROR";
+        resultText = "⚠️ ERROR";
         resultClass = "rejected";
       } else if (machineStatus.toUpperCase().includes("FULL")) {
         statusClass = "status-error";
-        resultText = "STORAGE FULL";
+        resultText = "⚠️ STORAGE FULL";
         resultClass = "rejected";
       } else if (machineStatus.toUpperCase().includes("READY")) {
         statusClass = "status-ready";
@@ -553,23 +574,25 @@
         resultClass = "accepted";
       } else if (machineStatus.toUpperCase().includes("WAITING")) {
         statusClass = "status-pending";
-        resultText = "WAITING FOR BOTTLE";
+        resultText = "⏳ WAITING FOR BOTTLE";
         resultClass = "";
       } else {
         statusClass = "status-ready";
         resultText = machineStatus;
         resultClass = "accepted";
       }
+      
+      machineEl.innerText = resultText;
+      machineEl.className = "machine-badge " + statusClass;
     }
-    
-    machineEl.innerText = displayStatus;
-    machineEl.className = "machine-badge " + statusClass;
 
+    // Update database and time status
     document.getElementById("dbStatus").innerText = "Connected";
     document.getElementById("dbStatus").className = "value online";
     document.getElementById("timeStatus").innerText = "Connected";
     document.getElementById("timeStatus").className = "value online";
     
+    // Update bottle size and weight
     if (data.latest_transaction && data.latest_transaction.bottle_size) {
       document.getElementById("bottleSize").innerText = data.latest_transaction.bottle_size;
     } else {
@@ -582,11 +605,12 @@
       document.getElementById("currentWeight").innerText = "—";
     }
     
+    // Update result status
     const resultEl = document.getElementById("resultStatus");
     resultEl.innerText = resultText;
     resultEl.className = "value " + resultClass;
 
-    // ===== STORAGE =====
+    // ===== STORAGE - CORRECTED WITH STATUS PRIORITY =====
     const storageStatus = data.storage_status ?? "AVAILABLE";
     const storageStatusEl = document.getElementById("storageStatusValue");
     storageStatusEl.innerText = storageStatus;
@@ -597,8 +621,27 @@
       storageStatusEl.className = "storage-value available";
     }
 
-    const distanceCm = data.storage_distance_cm ?? 0;
-    let percentage = Math.min(100, Math.max(0, (distanceCm / MAX_CM) * 100));
+    // Get distance reading
+    let distanceCm = data.storage_distance_cm ?? 0;
+    
+    // CRITICAL FIX: If storage_status is AVAILABLE, cap the percentage at 30%
+    // This ensures AVAILABLE doesn't show as FULL
+    let percentage = 0;
+    
+    if (storageStatus.toUpperCase() === "AVAILABLE") {
+      // If status is AVAILABLE, use a fixed low percentage or calculate but cap at 30%
+      // Calculate from distance but cap at 30% maximum
+      let rawPercentage = (distanceCm / MAX_CM) * 100;
+      percentage = Math.min(30, Math.max(0, rawPercentage));
+    } else if (storageStatus.toUpperCase() === "FULL") {
+      // If status is FULL, show high percentage
+      let rawPercentage = (distanceCm / MAX_CM) * 100;
+      percentage = Math.min(100, Math.max(70, rawPercentage));
+    } else {
+      // For other statuses, use normal calculation
+      percentage = Math.min(100, Math.max(0, (distanceCm / MAX_CM) * 100));
+    }
+    
     const roundedPercentage = Math.round(percentage);
 
     document.getElementById("fillPercentage").innerHTML = roundedPercentage + "%";
@@ -616,23 +659,23 @@
       fillStatus.innerText = "Almost Full";
       fillStatus.style.color = "#c62828";
       alertEl.className = "storage-alert warning";
-      alertEl.innerHTML = "Almost Full — Need to Empty!";
+      alertEl.innerHTML = "⚠️ Almost Full — Need to Empty!";
     } else if (roundedPercentage >= 60) {
       progressFill.classList.add("warning");
       fillStatus.innerText = "Getting Full";
       fillStatus.style.color = "#e8a83a";
       alertEl.className = "storage-alert warning";
-      alertEl.innerHTML = "Getting Full — Consider Emptying Soon";
+      alertEl.innerHTML = "⚡ Getting Full — Consider Emptying Soon";
     } else if (roundedPercentage >= 30) {
       fillStatus.innerText = "Moderate Fill";
       fillStatus.style.color = "#4caf50";
       alertEl.className = "storage-alert success";
-      alertEl.innerHTML = "Moderate Fill — Still Plenty of Space";
+      alertEl.innerHTML = " Moderate Fill — Still Plenty of Space";
     } else {
       fillStatus.innerText = "Plenty of Space";
       fillStatus.style.color = "#2b7f3b";
       alertEl.className = "storage-alert success";
-      alertEl.innerHTML = "Plenty of Space Available";
+      alertEl.innerHTML = " Plenty of Space Available";
     }
 
     // ===== LATEST TRANSACTION =====
@@ -640,7 +683,8 @@
       const lt = data.latest_transaction;
       const statusText = lt.status ?? "PENDING";
       const isAccepted = statusText.toUpperCase().includes("ACCEPT");
-      const isRejected = statusText.toUpperCase().includes("REJECT");
+      const isRejected = statusText.toUpperCase().includes("REJECT") || statusText.toUpperCase().includes("METAL");
+      const isStabilizing = statusText.toUpperCase().includes("STABILIZING");
 
       const badgeEl = document.getElementById("latestStatusBadge");
       badgeEl.innerText = statusText;
@@ -649,6 +693,8 @@
         badgeEl.className = "machine-badge status-accepted";
       } else if (isRejected) {
         badgeEl.className = "machine-badge status-rejected";
+      } else if (isStabilizing) {
+        badgeEl.className = "machine-badge status-stabilizing";
       } else {
         badgeEl.className = "machine-badge status-pending";
       }
