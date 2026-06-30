@@ -1,143 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>KaPi-Noy | Smart Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>KaPi-Noy | About</title>
   <link rel="icon" type="image/png" href="name.png" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/about.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-  <!-- ===== FLOATING BACKGROUND ===== -->
-  <div class="floating-bg">
-    <div class="float-item">☕</div>
-    <div class="float-item">🫘</div>
-    <div class="float-item">☕</div>
-    <div class="float-item">🫘</div>
-    <div class="float-item">☕</div>
-    <div class="float-item">🫘</div>
-    <div class="float-item">☕</div>
-    <div class="float-item">🫘</div>
-    <div class="float-item">☕</div>
-    <div class="float-item">🫘</div>
-    <div class="float-item">🌱</div>
-    <div class="float-item">🌿</div>
-    <div class="float-item">🌱</div>
-    <div class="float-item">🌿</div>
-    <div class="float-item">🌱</div>
-    <div class="steam"></div>
-    <div class="steam"></div>
-    <div class="steam"></div>
-    <div class="steam"></div>
-    <div class="steam"></div>
+  <!-- ===== COFFEE BACKGROUND EFFECTS ===== -->
+  <div class="coffee-bg" id="coffeeBg"></div>
+
+  <!-- ===== LOADING ===== -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"></div>
+    <div class="loading-text">Brewing KaPi-Noy...</div>
   </div>
 
-<div class="dashboard-container">
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <img src="name.png" alt="KaPi-Noy" />
+    </div>
 
-  <!-- ===== HEADER ===== -->
-  <div class="header">
-    <div class="header-left">
-      <img class="logo" src="logo.png" alt="KaPi-Noy">
-      <div class="header-text">
-        <h1>KaPi-Noy Admin Console</h1>
-        <p>Coffee Vendo &amp; Smart Bottle Recycling Monitoring</p>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faqs">FAQs</a></li>
+      <li><span class="live-badge online" id="liveBadge">Live</span></li>
+    </ul>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="sustainability-badge">
+          Sustainable · Smart · Eco-Friendly
+        </div>
+        <h1>
+          Smart Coffee &amp;<br />
+          <span class="highlight">Bottle Recycling</span>
+        </h1>
+        <p>
+          KaPi-Noy is a sustainable smart vending machine that combines
+          coffee dispensing with an intelligent bottle recycling system
+          for a greener future.
+        </p>
+        <div class="sub-text">
+          <span>Powered by renewable energy</span>
+          <span>Real-time monitoring</span>
+        </div>
+        <div class="hero-buttons">
+          <a href="login.html" class="btn-primary">Admin Login</a>
+          <a href="#about" class="btn-secondary">Learn More</a>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <div class="logo-wrapper">
+          <div class="glow-ring"></div>
+          <div class="coffee-ring"></div>
+          <div class="coffee-ring-2"></div>
+          <span class="sparkle">✦</span>
+          <span class="sparkle">✦</span>
+          <span class="sparkle">✦</span>
+          <span class="sparkle">✦</span>
+          <img src="logo.png" alt="KaPi-Noy Logo" class="logo-float" />
+        </div>
       </div>
     </div>
 
-    <div class="header-right">
-      <div class="live-badge" id="liveBadge">Live System</div>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+    <!-- ===== SCROLL DOWN INDICATOR ===== -->
+    <div class="scroll-indicator" onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' })">
+      <span class="scroll-text">Scroll to explore</span>
+      <span class="scroll-arrow">▼</span>
     </div>
-  </div>
-
-  <!-- ===== KPI GRID ===== -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-label">Total Accepted</div>
-      <div class="kpi-value" id="totalCollected">0</div>
-      <div class="kpi-sub">Successful bottle insertions</div>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-label">Total Rejected</div>
-      <div class="kpi-value" id="totalRejected">0</div>
-      <div class="kpi-sub">Invalid / metal detected</div>
-    </div>
-  </div>
-
-  <!-- ===== TRACKING SECTION ===== -->
-  <div class="tracking-section">
-    <div class="section-title">
-      <h3>Bottle Collection Summary</h3>
-    </div>
-
-    <div class="tracking-grid">
-      <div class="track-card">
-        <div class="track-size">Accepted</div>
-        <div class="track-count" id="generalAccepted">0</div>
-        <div class="track-label">total bottles collected</div>
-      </div>
-
-      <div class="track-card">
-        <div class="track-size">Rejected</div>
-        <div class="track-count" id="generalRejected">0</div>
-        <div class="track-label">invalid / metal detected</div>
-      </div>
-
-      <div class="track-card">
-        <div class="track-size">Total Attempts</div>
-        <div class="track-count" id="totalAttempts">0</div>
-        <div class="track-label">accepted + rejected</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== BOTTLE SIZE INVENTORY ===== -->
-  <div class="inventory-section">
-    <div class="section-title">
-      <h3>Bottle Size Inventory</h3>
-    </div>
-    <div class="inventory-grid">
-      <div class="inventory-item">
-        <div class="size-label">230mL</div>
-        <div class="size-count" id="inv230">0</div>
-        <div class="size-sub">collected</div>
-      </div>
-      <div class="inventory-item">
-        <div class="size-label">250mL</div>
-        <div class="size-count" id="inv250">0</div>
-        <div class="size-sub">collected</div>
-      </div>
-      <div class="inventory-item">
-        <div class="size-label">290mL</div>
-        <div class="size-count" id="inv290">0</div>
-        <div class="size-sub">collected</div>
-      </div>
-      <div class="inventory-item">
-        <div class="size-label">320mL</div>
-        <div class="size-count" id="inv320">0</div>
-        <div class="size-sub">collected</div>
-      </div>
-      <div class="inventory-item">
-        <div class="size-label">335mL</div>
-        <div class="size-count" id="inv335">0</div>
-        <div class="size-sub">collected</div>
-      </div>
-      <div class="inventory-item">
-        <div class="size-label">350mL</div>
-        <div class="size-count" id="inv350">0</div>
-        <div class="size-sub">collected</div>
-      </div>
-      <div class="inventory-item">
-        <div class="size-label">500mL</div>
-        <div class="size-count" id="inv500">0</div>
-        <div class="size-sub">collected</div>
-      </div>
-    </div>
-  </div>
+  </section>
 
   <!-- ===== INSIGHT DOUBLE ===== -->
   <div class="insight-double">
@@ -148,7 +92,7 @@
       <div class="insight-body">
         <div class="machine-status-wrapper">
           <div class="machine-badge status-ready" id="machineStatusText">SYSTEM READY</div>
-          
+
           <div class="machine-details">
             <div class="machine-detail-item">
               <span class="label">Database</span>
@@ -209,295 +153,434 @@
     </div>
   </div>
 
-  <!-- ===== LATEST TRANSACTION ===== -->
-  <div class="insight-card" style="margin-bottom:24px;">
-    <div class="insight-header">
-      <h3>Latest Transaction</h3>
+  <!-- ===== ABOUT ===== -->
+  <section class="about-section" id="about">
+    <h2 class="section-title">About KaPi-Noy</h2>
+
+    <div class="about-grid">
+      <!-- What is KaPi-Noy? -->
+      <div class="about-card">
+        <div class="icon">☕</div>
+        <h3>What is KaPi-Noy?</h3>
+        <div class="about-desc">
+          <p class="product-service">
+            <strong>Product Service:</strong><br>
+            Kapi-Noy is an IoT-enabled smart coffee vending machine that accepts recyclable plastic bottles as an alternative payment method. The system combines automated beverage dispensing, plastic bottle collection, and real-time monitoring to promote convenience, sustainability, and responsible waste management within educational institutions and community.
+          </p>
+          <p class="social-impact">
+            <strong>Social Impact:</strong><br>
+            KaPi-Noy promotes environmental awareness by encouraging proper plastic waste disposal through an incentive-based recycling system. By integrating sustainability with everyday coffee purchases, the project helps reduce plastic pollution, supports recycling initiatives, and fosters a culture of environmental responsibility among students and community members.
+          </p>
+        </div>
+      </div>
+
+      <!-- SDG Support -->
+      <div class="about-card">
+        <div class="icon">🌍</div>
+        <h3>SDG Support</h3>
+        <p>
+          KaPi-Noy supports the following Sustainable Development Goals:
+        </p>
+        <div class="sdg-list">
+          <div class="sdg-tag">
+            <span class="sdg-number">4</span>
+            <span class="sdg-label">Quality Education</span>
+          </div>
+          <div class="sdg-tag">
+            <span class="sdg-number">7</span>
+            <span class="sdg-label">Clean Energy</span>
+          </div>
+          <div class="sdg-tag">
+            <span class="sdg-number">9</span>
+            <span class="sdg-label">Industry Innovation</span>
+          </div>
+          <div class="sdg-tag">
+            <span class="sdg-number">12</span>
+            <span class="sdg-label">Responsible Consumption</span>
+          </div>
+          <div class="sdg-tag">
+            <span class="sdg-number">17</span>
+            <span class="sdg-label">Partnerships for the Goals</span>
+          </div>
+        </div>
+        <p style="margin-top:10px; font-size:12px; color:#7a6a58; line-height:1.6;">
+          KaPi-Noy contributes to a sustainable future by promoting responsible consumption, clean energy usage, innovation in recycling technology, and building partnerships for environmental awareness.
+        </p>
+      </div>
+
+      <!-- How It Works -->
+      <div class="about-card">
+        <div class="icon">💡</div>
+        <h3>How It Works</h3>
+        <div class="steps">
+          <div class="step-item">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <span class="step-title">Remove Excess Water</span>
+              <span class="step-desc">Ensure that the plastic bottle is completely empty before inserting it into the machine.</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <span class="step-title">Insert Plastic Bottle</span>
+              <span class="step-desc">Place the single-use plastic bottle into the designated bottle slot.</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <span class="step-title">Wait for Validation</span>
+              <span class="step-desc">Allow the system to verify and confirm that the bottle is valid.</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <span class="step-title">Select Coffee</span>
+              <span class="step-desc">Choose your preferred coffee option from the available selections.</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-number">5</span>
+            <div class="step-content">
+              <span class="step-title">Processing &amp; Dispensing</span>
+              <span class="step-desc">Wait while the machine processes your request and prepares your selected coffee.</span>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-number">6</span>
+            <div class="step-content">
+              <span class="step-title">Enjoy Your Coffee!</span>
+              <span class="step-desc">Collect your coffee from the dispensing area and enjoy your drink.</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="insight-body">
-      <div id="latestStatusBadge" class="machine-badge status-ready">—</div>
+  </section>
 
-      <div class="latest-detail-row">
-        <div class="detail-item">
-          <div class="detail-label">Weight</div>
-          <div class="detail-value" id="latestWeight">—</div>
+  <!-- ===== TEAM WITH EXPERTISE ===== -->
+  <div class="team-section">
+    <h2 class="section-title">Meet KaPi-Noy Team</h2>
+
+    <div class="team-grid">
+      <!-- Carylle Jane P. Condez -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="Team/Condez.jpg" alt="Carylle Jane P. Condez" />
         </div>
-
-        <div class="detail-item">
-          <div class="detail-label">Metal</div>
-          <div class="detail-value" id="latestMetal">—</div>
+        <div class="team-info">
+          <h4>Carylle Jane P. Condez</h4>
+          <div class="role">Hardware Engineer<br>Backend Developer</div>
+          <div class="expertise">Expertise: Knowledge in Web Development</div>
+          <button class="toggle-desc" onclick="toggleDesc(this)">View Description</button>
+          <div class="description">
+            Spearheads hardware development and backend systems integration, ensuring seamless real-time
+            communication between hardware components and the cloud platform.
+          </div>
         </div>
+      </div>
 
-        <div class="detail-item">
-          <div class="detail-label">Date</div>
-          <div class="detail-value" id="latestTime">—</div>
+      <!-- Cydney B. Delos Reyes -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="Team/DelosReyes.png" alt="Cydney B. Delos Reyes" />
+        </div>
+        <div class="team-info">
+          <h4>Cydney B. Delos Reyes</h4>
+          <div class="role">System Architect<br>Hardware Designer</div>
+          <div class="expertise">Expertise: Front-End Web Developer</div>
+          <button class="toggle-desc" onclick="toggleDesc(this)">View Description</button>
+          <div class="description">
+            Designs the overall system architecture, translating conceptual sketches into functional hardware prototypes.
+            Creates detailed hardware documentation and ensures system reliability and performance.
+          </div>
+        </div>
+      </div>
+
+      <!-- John Vincent S. Jamot -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="Team/Jamot.png" alt="John Vincent S. Jamot" />
+        </div>
+        <div class="team-info">
+          <h4>John Vincent S. Jamot</h4>
+          <div class="role">Hardware Engineer<br>Electrical Engineer</div>
+          <div class="expertise"> Expertise: Front-End Developer / UI Specialist</div>
+          <button class="toggle-desc" onclick="toggleDesc(this)">View Description</button>
+          <div class="description">
+            Manages electrical wiring and hardware assembly, ensuring precise integration of sensors,
+            servos, relays, and power supply for safe and reliable operation.
+          </div>
+        </div>
+      </div>
+
+      <!-- Manieylene A. Manile -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="Team/Manile.jpg" alt="Manieylene A. Manile" />
+        </div>
+        <div class="team-info">
+          <h4>Manieylene A. Manile</h4>
+          <div class="role">UX/UI Designer<br>Quality Assurance Specialist</div>
+          <div class="expertise"> Expertise: Has knowledge in Programming (Web Development)</div>
+          <button class="toggle-desc" onclick="toggleDesc(this)">View Description</button>
+          <div class="description">
+            Creates intuitive and user-friendly dashboard interfaces. Performs rigorous quality assurance
+            testing to validate system functionality, reliability, and adherence to project specifications.
+          </div>
+        </div>
+      </div>
+
+      <!-- Amithai V. Templo -->
+      <div class="team-card">
+        <div class="team-img">
+          <img src="Team/Templo.png" alt="Amithai V. Templo" />
+        </div>
+        <div class="team-info">
+          <h4>Amithai V. Templo</h4>
+          <div class="role">Project Manager<br>Software Developer</div>
+          <div class="expertise"> Expertise: Full Stack Developer &amp; Web Designing</div>
+          <button class="toggle-desc" onclick="toggleDesc(this)">View Description</button>
+          <div class="description">
+            Oversees project timelines, resources, and team coordination. Analyzes environmental impact,
+            ensures SDG alignment, and contributes to software development of the dashboard.
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== TRANSACTION HISTORY ===== -->
-  <div class="history-section">
-    <div class="transaction-header">
-      <h3>Transaction History Log</h3>
-      <div class="search-wrapper">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Search transactions..." oninput="applySearch()">
-      </div>
+  <!-- ===== FAQS WITH ACCORDION ===== -->
+  <section class="faqs-section" id="faqs">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+
+    <!-- Search Bar -->
+    <div class="faq-search-wrapper">
+      <input type="text" id="faqSearch" placeholder="Search for questions..." oninput="searchFAQs()" />
+      <span class="faq-search-icon">🔍</span>
     </div>
 
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Transaction No.</th>
-            <th>Status</th>
-            <th>Bottle Size</th>
-            <th>Weight</th>
-            <th>Metal</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="transactionTableBody">
-          <tr>
-            <td colspan="6" style="text-align:center; padding:32px; color:#8c7a68;">
-              Loading transaction data...
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="faq-container" id="faqContainer">
 
-    <div class="pagination-wrapper">
-      <div class="pagination-controls">
-        <button id="prevPage" onclick="changePage(-1)">Previous</button>
-        <span class="page-info" id="pageInfo">Page 1 of 1</span>
-        <button id="nextPage" onclick="changePage(1)">Next</button>
-        <select id="entriesPerPage" onchange="changeEntriesPerPage()">
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-        </select>
-        <span class="per-page-label">per page</span>
+      <!-- === HOW TO USE === -->
+      <div class="faq-category">
+        <h3 class="faq-category-title">How to Use</h3>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do I recycle a bottle?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            Simply insert your plastic bottle into the designated slot. The machine will automatically detect, weigh, and validate the bottle. If accepted, you will receive a reward credit.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What types of bottles are accepted?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            The machine accepts plastic bottles with sizes ranging from 230mL to 500mL. Accepted sizes include: 230mL, 250mL, 290mL, 320mL, 335mL, 350mL, and 500mL.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do I get my reward?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            After successfully recycling bottles, the machine will dispense a reward token or credit. For every 3 small bottles (230-290mL), 2 medium bottles (320-350mL), or 1 large bottle (500mL), you receive 5 pesos credit.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What if I insert a metal object?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            The machine has a built-in inductive sensor that detects metal objects. If metal is detected, the bottle will be automatically rejected and the transaction will be reflected on the screen.
+          </div>
+        </div>
       </div>
+
+      <!-- === MAINTENANCE === -->
+      <div class="faq-category">
+        <h3 class="faq-category-title">Maintenance</h3>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How often should I empty the storage bin?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            The storage bin should be emptied when the fill level reaches 80% or higher. The dashboard will display an alert "Almost Full — Need to Empty!" to notify the admin. Regular checking is recommended every 2-3 days depending on usage.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do I clean the machine?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            Use a soft, dry cloth to wipe the exterior surfaces. For the bottle insertion slot, use a slightly damp cloth to remove any dirt or residue. Always ensure the machine is powered off before performing any maintenance.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What should I do if the sensor is not working?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            If the sensors are not functioning properly, check the connections and ensure the sensors are clean. If the issue persists, contact the technical support team for assistance.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How to reset the machine?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            To reset the machine, simply power cycle the unit by turning it off and on. The system will automatically recalibrate and return to ready state. For any major issues, contact the admin dashboard for troubleshooting.
+          </div>
+        </div>
+      </div>
+
+      <!-- === DASHBOARD === -->
+      <div class="faq-category">
+        <h3 class="faq-category-title">Dashboard</h3>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What does the dashboard show?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            The dashboard provides real-time monitoring of the machine. It shows total accepted/rejected bottles, storage fill level, machine operational status, latest transaction details, and bottle size inventory.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do I view transaction history?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            Transaction history is available in the dashboard. You can search by date, weight, status, or bottle size. The table also includes pagination so you can browse through all transactions.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What does "Storage Capacity" mean?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            Storage Capacity refers to the remaining space in the bottle collection bin. The machine uses an ultrasonic sensor to measure the fill level, displayed as a percentage on the dashboard.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What is the "Bottle Size Inventory"?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            This section shows the count of bottles collected per size category (230mL, 250mL, 290mL, 320mL, 335mL, 350mL, and 500mL). It helps track which bottle sizes are most commonly recycled.
+          </div>
+        </div>
+      </div>
+
+      <!-- No results message -->
+      <div class="faq-no-results" id="faqNoResults">
+        No questions found matching your search.
+      </div>
+
     </div>
-  </div>
+  </section>
 
   <!-- ===== FOOTER ===== -->
-  <div class="footer">
-    KaPi-Noy Smart Waste Intelligence · Real-time Monitoring System
-  </div>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="brand-footer">
+          <img src="name.png" alt="KaPi-Noy" />
+          <p>Smart Coffee Vendo + Bottle Recycling</p>
+        </div>
+        <div class="footer-social">
+          <a href="https://www.facebook.com" title="Facebook">f</a>
+          <a href="https://www.instagram.com/kapi.noy" title="Instagram">i</a>
+          <a href="mailto:kapinoy2026@gmail.com" title="Email">✉</a>
+        </div>
+      </div>
 
-</div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="#home">Home</a>
+        <a href="#faqs">FAQs</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </div>
 
-<!-- ===== LOADING ===== -->
-<div class="loading-screen" id="loadingScreen">
-  <div class="loader"></div>
-  <div class="loading-text">Logging out...</div>
-</div>
+      <div class="footer-col">
+        <h4>For Users</h4>
+        <a href="#">Feedback</a>
+      </div>
 
-<!-- ===== FIREBASE & PAGINATION ===== -->
-<script type="module">
-  if(localStorage.getItem("kapinoyLoggedIn") !== "true") {
-    window.location.href = "login.html";
-  }
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <p>kapinoy2026@gmail.com</p>
+        <p>@kapi.noy</p>
+        <p>KaPi-Noy</p>
+        <p>PUP Institute of Technology, Manila</p>
+      </div>
+    </div>
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    <div class="footer-bottom">
+      © 2026 KaPi-Noy Smart Waste Intelligence · PUP Institute of Technology
+    </div>
+  </footer>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCPNHUQkBMG2tcVOuBDEaLyZ3TdrAXOBn0",
-    authDomain: "kapi-noy.firebaseapp.com",
-    databaseURL: "https://kapi-noy-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "kapi-noy",
-    storageBucket: "kapi-noy.firebasestorage.app",
-    messagingSenderId: "1066533707019",
-    appId: "1:1066533707019:web:d7a14aceac30094c94d60e"
-  };
+  <!-- ===== FIREBASE ===== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const machineRef = ref(db, "plastic_machine");
-  const MAX_CM = 50;
+    const firebaseConfig = {
+      apiKey: "AIzaSyCPNHUQkBMG2tcVOuBDEaLyZ3TdrAXOBn0",
+      authDomain: "kapi-noy.firebaseapp.com",
+      databaseURL: "https://kapi-noy-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "kapi-noy",
+      storageBucket: "kapi-noy.firebasestorage.app",
+      messagingSenderId: "1066533707019",
+      appId: "1:1066533707019:web:d7a14aceac30094c94d60e"
+    };
 
-  let allTransactions = [];
-  let filteredTransactions = [];
-  let currentPage = 1;
-  let entriesPerPage = 10;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const machineRef = ref(db, "plastic_machine");
+    const MAX_DISTANCE_CM = 50;
 
-  // ===== OFFLINE DETECTION =====
-  const liveBadge = document.getElementById('liveBadge');
-  let isOnline = false;
-  let timeoutId = null;
+    const liveBadge = document.getElementById('liveBadge');
 
-  function setOffline() {
-    isOnline = false;
-    liveBadge.className = 'live-badge offline';
-    liveBadge.textContent = 'Offline';
-  }
+    let isOnline = false;
+    let timeoutId = null;
 
-  function setOnline() {
-    isOnline = true;
-    liveBadge.className = 'live-badge online';
-    liveBadge.textContent = 'Live';
-  }
+    function setOffline() {
+      isOnline = false;
+      liveBadge.className = 'live-badge offline';
+      liveBadge.textContent = 'Offline';
 
-  function resetOfflineTimer() {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      if (!isOnline) return;
-      setOffline();
-      console.log('⚠️ Device went OFFLINE (timeout)');
-    }, 15000);
-  }
-
-  function formatMillis(ms) {
-    if (ms === undefined || ms === null) return "—";
-    const date = new Date(ms);
-    if (isNaN(date.getTime())) return "—";
-    return date.toLocaleString('en-PH', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  function renderTable() {
-    const tbody = document.getElementById("transactionTableBody");
-    const start = (currentPage - 1) * entriesPerPage;
-    const end = Math.min(start + entriesPerPage, filteredTransactions.length);
-    const pageData = filteredTransactions.slice(start, end);
-
-    if (pageData.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:28px; color:#8c7a68;">No transactions found</td></tr>`;
-    } else {
-      tbody.innerHTML = "";
-      for (const tx of pageData) {
-        const status = tx.status ?? "—";
-        let cls = "pending";
-        if (status.toUpperCase().includes("ACCEPT")) cls = "accepted";
-        else if (status.toUpperCase().includes("REJECT")) cls = "rejected";
-
-        const metalVal = tx.metal_detected ?? "—";
-        const metalClass = metalVal.toUpperCase().includes("YES") ? "tx-metal yes" : "tx-metal no";
-        const bottleSize = tx.bottle_size ?? "—";
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><span class="tx-number">${tx.transaction_no ?? "—"}</span></td>
-          <td><span class="status-badge ${cls}">${status}</span></td>
-          <td><span class="tx-weight">${bottleSize}</span></td>
-          <td><span class="tx-weight">${tx.weight !== undefined ? tx.weight + " g" : "—"}</span></td>
-          <td><span class="${metalClass}">${metalVal}</span></td>
-          <td><span class="tx-date">${formatMillis(tx.millis_time)}</span></td>
-        `;
-        tbody.appendChild(row);
-      }
-    }
-
-    const totalPages = Math.ceil(filteredTransactions.length / entriesPerPage) || 1;
-    document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
-    document.getElementById("prevPage").disabled = currentPage <= 1;
-    document.getElementById("nextPage").disabled = currentPage >= totalPages;
-  }
-
-  window.applySearch = function() {
-    const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-    
-    if (!searchTerm) {
-      filteredTransactions = [...allTransactions];
-    } else {
-      filteredTransactions = allTransactions.filter(tx => {
-        const dateStr = formatMillis(tx.millis_time).toLowerCase();
-        const weightStr = tx.weight !== undefined ? tx.weight.toString() : "";
-        const statusStr = (tx.status ?? "").toLowerCase();
-        const sizeStr = (tx.bottle_size ?? "").toLowerCase();
-        const metalStr = (tx.metal_detected ?? "").toLowerCase();
-        const noStr = (tx.transaction_no ?? "").toString();
-        
-        return dateStr.includes(searchTerm) ||
-               weightStr.includes(searchTerm) ||
-               statusStr.includes(searchTerm) ||
-               sizeStr.includes(searchTerm) ||
-               metalStr.includes(searchTerm) ||
-               noStr.includes(searchTerm);
-      });
-    }
-    
-    currentPage = 1;
-    renderTable();
-  };
-
-  window.changePage = function(delta) {
-    const totalPages = Math.ceil(filteredTransactions.length / entriesPerPage) || 1;
-    const newPage = currentPage + delta;
-    if (newPage >= 1 && newPage <= totalPages) {
-      currentPage = newPage;
-      renderTable();
-    }
-  };
-
-  window.changeEntriesPerPage = function() {
-    entriesPerPage = parseInt(document.getElementById("entriesPerPage").value);
-    currentPage = 1;
-    renderTable();
-  };
-
-  // Start with offline
-  setOffline();
-
-  onValue(machineRef, (snapshot) => {
-    const data = snapshot.val();
-
-    // Reset timer on every data receive
-    resetOfflineTimer();
-
-    if (!data) {
-      setOffline();
-      document.getElementById("transactionTableBody").innerHTML =
-        `<tr><td colspan="6" style="text-align:center; padding:32px; color:#8c7a68;">No Firebase data found</td></tr>`;
-      return;
-    }
-
-    // If we have data, set online
-    setOnline();
-
-    const acceptedTotal = data.total_collected ?? 0;
-    const rejectedTotal = data.total_rejected ?? 0;
-
-    document.getElementById("totalCollected").innerText = acceptedTotal;
-    document.getElementById("totalRejected").innerText = rejectedTotal;
-
-    document.getElementById("generalAccepted").innerText = acceptedTotal;
-    document.getElementById("generalRejected").innerText = rejectedTotal;
-    document.getElementById("totalAttempts").innerText = acceptedTotal + rejectedTotal;
-
-    document.getElementById("inv230").innerText = data.total_230ml ?? 0;
-    document.getElementById("inv250").innerText = data.total_250ml ?? 0;
-    document.getElementById("inv290").innerText = data.total_290ml ?? 0;
-    document.getElementById("inv320").innerText = data.total_320ml ?? 0;
-    document.getElementById("inv335").innerText = data.total_335ml ?? 0;
-    document.getElementById("inv350").innerText = data.total_350ml ?? 0;
-    document.getElementById("inv500").innerText = data.total_500ml ?? 0;
-
-    // ===== MACHINE STATUS WITH STABILIZING LOGIC =====
-    const machineEl = document.getElementById("machineStatusText");
-    const machineStatus = data.machine_status ?? "READY";
-    
-    let displayStatus = machineStatus;
-    let statusClass = "status-ready";
-    let resultText = "SYSTEM READY";
-    let resultClass = "accepted";
-    
-    // Check if machine_status is explicitly OFFLINE
-    if (machineStatus.toUpperCase() === 'OFFLINE') {
-      setOffline();
-      machineEl.innerText = "OFFLINE";
-      machineEl.className = "machine-badge status-offline";
+      document.getElementById("machineStatusText").innerText = "OFFLINE";
+      document.getElementById("machineStatusText").className = "machine-badge status-offline";
       document.getElementById("dbStatus").innerText = "Disconnected";
       document.getElementById("dbStatus").className = "value offline";
       document.getElementById("timeStatus").innerText = "Disconnected";
@@ -506,239 +589,308 @@
       document.getElementById("currentWeight").innerText = "—";
       document.getElementById("resultStatus").innerText = "⚠️ Device Offline";
       document.getElementById("resultStatus").className = "value rejected";
-      return;
+
+      document.getElementById("storageStatusValue").innerText = "NO DATA";
+      document.getElementById("storageStatusValue").className = "storage-value full";
+      document.getElementById("fillPercentage").innerHTML = "—";
+      document.getElementById("fillPercentLabel").innerHTML = "—";
+      document.getElementById("fillStatus").innerText = "Device Offline";
+      document.getElementById("fillStatus").style.color = "#c62828";
+      document.getElementById("storageAlert").className = "storage-alert warning";
+      document.getElementById("storageAlert").innerHTML = "⚠️ Device Offline";
     }
 
-    // Check for latest transaction status
-    if (data.latest_transaction) {
-      const txStatus = data.latest_transaction.status ?? "PENDING";
-      
-      // Check if it's STABILIZING - show this first
-      if (txStatus.toUpperCase().includes("STABILIZING")) {
-        statusClass = "status-stabilizing";
-        displayStatus = "STABILIZING WEIGHT...";
-        resultText = "Please Wait, Stabilizing Weight...";
-        resultClass = "";
-        machineEl.innerText = displayStatus;
-        machineEl.className = "machine-badge " + statusClass;
-      } 
-      // Check if it's ACCEPTED
-      else if (txStatus.toUpperCase().includes("ACCEPT")) {
-        statusClass = "status-accepted";
-        displayStatus = "ACCEPTED ✓";
-        resultText = "ACCEPTED ✓";
-        resultClass = "accepted";
-        machineEl.innerText = displayStatus;
-        machineEl.className = "machine-badge " + statusClass;
-      } 
-      // Check if it's REJECTED (including METAL)
-      else if (txStatus.toUpperCase().includes("REJECT") || txStatus.toUpperCase().includes("METAL")) {
-        statusClass = "status-rejected";
-        displayStatus = "REJECTED ✗";
-        resultText = "REJECTED ✗";
-        resultClass = "rejected";
-        machineEl.innerText = displayStatus;
-        machineEl.className = "machine-badge " + statusClass;
-      } 
-      // Check for ERROR
-      else if (txStatus.toUpperCase().includes("ERROR")) {
-        statusClass = "status-error";
-        displayStatus = "ERROR";
-        resultText = "⚠️ ERROR";
-        resultClass = "rejected";
-        machineEl.innerText = displayStatus;
-        machineEl.className = "machine-badge " + statusClass;
-      } 
-      // Default PENDING
-      else {
-        statusClass = "status-pending";
-        displayStatus = "PENDING...";
-        resultText = "Processing...";
-        resultClass = "";
-        machineEl.innerText = displayStatus;
-        machineEl.className = "machine-badge " + statusClass;
+    function setOnline() {
+      isOnline = true;
+      liveBadge.className = 'live-badge online';
+      liveBadge.textContent = 'Live';
+    }
+
+    function resetOfflineTimer() {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
-    } else {
-      // No transaction - show machine status
-      if (machineStatus.toUpperCase().includes("ERROR")) {
-        statusClass = "status-error";
-        resultText = "⚠️ ERROR";
-        resultClass = "rejected";
-      } else if (machineStatus.toUpperCase().includes("FULL")) {
-        statusClass = "status-error";
-        resultText = "⚠️ STORAGE FULL";
-        resultClass = "rejected";
-      } else if (machineStatus.toUpperCase().includes("READY")) {
-        statusClass = "status-ready";
-        resultText = "SYSTEM READY";
-        resultClass = "accepted";
-      } else if (machineStatus.toUpperCase().includes("WAITING")) {
-        statusClass = "status-pending";
-        resultText = "⏳ WAITING FOR BOTTLE";
-        resultClass = "";
+      timeoutId = setTimeout(() => {
+        if (!isOnline) return;
+        setOffline();
+        console.log('⚠️ Device went OFFLINE (timeout)');
+      }, 15000);
+    }
+
+    function updateStatus(data) {
+      // Reset timer on every data receive
+      resetOfflineTimer();
+
+      if (!data) {
+        setOffline();
+        return;
+      }
+
+      // If we have data, set online
+      setOnline();
+
+      const machineStatus = data.machine_status ? data.machine_status.toUpperCase() : '';
+
+      // Check if machine_status is explicitly OFFLINE
+      if (machineStatus === 'OFFLINE') {
+        setOffline();
+        return;
+      }
+
+      // ===== MACHINE STATUS =====
+      const machineEl = document.getElementById("machineStatusText");
+      const machineStatusText = data.machine_status ?? "READY";
+
+      let displayStatus = machineStatusText;
+      let statusClass = "status-ready";
+      let resultText = "—";
+      let resultClass = "";
+
+      if (data.latest_transaction) {
+        const txStatus = data.latest_transaction.status ?? "PENDING";
+        displayStatus = txStatus;
+
+        if (txStatus.toUpperCase().includes("ACCEPT")) {
+          statusClass = "status-accepted";
+          resultText = "ACCEPTED";
+          resultClass = "accepted";
+        } else if (txStatus.toUpperCase().includes("REJECT")) {
+          statusClass = "status-rejected";
+          resultText = "REJECTED";
+          resultClass = "rejected";
+        } else if (txStatus.toUpperCase().includes("METAL")) {
+          statusClass = "status-rejected";
+          resultText = "METAL DETECTED";
+          resultClass = "rejected";
+        } else if (txStatus.toUpperCase().includes("STABILIZING")) {
+          statusClass = "status-stabilizing";
+          resultText = "Stabilizing Weight...";
+          resultClass = "";
+        } else if (txStatus.toUpperCase().includes("ERROR")) {
+          statusClass = "status-error";
+          resultText = "ERROR";
+          resultClass = "rejected";
+        } else {
+          statusClass = "status-pending";
+          resultText = "PENDING";
+          resultClass = "";
+        }
       } else {
-        statusClass = "status-ready";
-        resultText = machineStatus;
-        resultClass = "accepted";
+        if (machineStatusText.toUpperCase().includes("ERROR")) {
+          statusClass = "status-error";
+          resultText = "ERROR";
+          resultClass = "rejected";
+        } else if (machineStatusText.toUpperCase().includes("FULL")) {
+          statusClass = "status-error";
+          resultText = "STORAGE FULL";
+          resultClass = "rejected";
+        } else if (machineStatusText.toUpperCase().includes("READY")) {
+          statusClass = "status-ready";
+          resultText = "SYSTEM READY";
+          resultClass = "accepted";
+        } else if (machineStatusText.toUpperCase().includes("WAITING")) {
+          statusClass = "status-pending";
+          resultText = "WAITING FOR BOTTLE";
+          resultClass = "";
+        } else {
+          statusClass = "status-ready";
+          resultText = machineStatusText;
+          resultClass = "accepted";
+        }
       }
-      
-      machineEl.innerText = resultText;
+
+      machineEl.innerText = displayStatus;
       machineEl.className = "machine-badge " + statusClass;
-    }
 
-    // Update database and time status
-    document.getElementById("dbStatus").innerText = "Connected";
-    document.getElementById("dbStatus").className = "value online";
-    document.getElementById("timeStatus").innerText = "Connected";
-    document.getElementById("timeStatus").className = "value online";
-    
-    // Update bottle size and weight
-    if (data.latest_transaction && data.latest_transaction.bottle_size) {
-      document.getElementById("bottleSize").innerText = data.latest_transaction.bottle_size;
-    } else {
-      document.getElementById("bottleSize").innerText = "—";
-    }
-    
-    if (data.latest_transaction && data.latest_transaction.weight !== undefined) {
-      document.getElementById("currentWeight").innerText = data.latest_transaction.weight + " g";
-    } else {
-      document.getElementById("currentWeight").innerText = "—";
-    }
-    
-    // Update result status
-    const resultEl = document.getElementById("resultStatus");
-    resultEl.innerText = resultText;
-    resultEl.className = "value " + resultClass;
+      document.getElementById("dbStatus").innerText = "Connected";
+      document.getElementById("dbStatus").className = "value online";
+      document.getElementById("timeStatus").innerText = "Connected";
+      document.getElementById("timeStatus").className = "value online";
 
-    // ===== STORAGE - CORRECTED WITH STATUS PRIORITY =====
-    const storageStatus = data.storage_status ?? "AVAILABLE";
-    const storageStatusEl = document.getElementById("storageStatusValue");
-    storageStatusEl.innerText = storageStatus;
-    
-    if (storageStatus.toUpperCase() === "FULL") {
-      storageStatusEl.className = "storage-value full";
-    } else {
-      storageStatusEl.className = "storage-value available";
-    }
-
-    // Get distance reading
-    let distanceCm = data.storage_distance_cm ?? 0;
-    
-    // CRITICAL FIX: If storage_status is AVAILABLE, cap the percentage at 30%
-    // This ensures AVAILABLE doesn't show as FULL
-    let percentage = 0;
-    
-    if (storageStatus.toUpperCase() === "AVAILABLE") {
-      // If status is AVAILABLE, use a fixed low percentage or calculate but cap at 30%
-      // Calculate from distance but cap at 30% maximum
-      let rawPercentage = (distanceCm / MAX_CM) * 100;
-      percentage = Math.min(30, Math.max(0, rawPercentage));
-    } else if (storageStatus.toUpperCase() === "FULL") {
-      // If status is FULL, show high percentage
-      let rawPercentage = (distanceCm / MAX_CM) * 100;
-      percentage = Math.min(100, Math.max(70, rawPercentage));
-    } else {
-      // For other statuses, use normal calculation
-      percentage = Math.min(100, Math.max(0, (distanceCm / MAX_CM) * 100));
-    }
-    
-    const roundedPercentage = Math.round(percentage);
-
-    document.getElementById("fillPercentage").innerHTML = roundedPercentage + "%";
-    document.getElementById("fillPercentLabel").innerHTML = roundedPercentage + "%";
-
-    const progressFill = document.getElementById("progressFill");
-    progressFill.style.width = roundedPercentage + "%";
-    progressFill.classList.remove("warning", "danger");
-
-    const fillStatus = document.getElementById("fillStatus");
-    const alertEl = document.getElementById("storageAlert");
-
-    if (roundedPercentage >= 80) {
-      progressFill.classList.add("danger");
-      fillStatus.innerText = "Almost Full";
-      fillStatus.style.color = "#c62828";
-      alertEl.className = "storage-alert warning";
-      alertEl.innerHTML = "⚠️ Almost Full — Need to Empty!";
-    } else if (roundedPercentage >= 60) {
-      progressFill.classList.add("warning");
-      fillStatus.innerText = "Getting Full";
-      fillStatus.style.color = "#e8a83a";
-      alertEl.className = "storage-alert warning";
-      alertEl.innerHTML = "⚡ Getting Full — Consider Emptying Soon";
-    } else if (roundedPercentage >= 30) {
-      fillStatus.innerText = "Moderate Fill";
-      fillStatus.style.color = "#4caf50";
-      alertEl.className = "storage-alert success";
-      alertEl.innerHTML = " Moderate Fill — Still Plenty of Space";
-    } else {
-      fillStatus.innerText = "Plenty of Space";
-      fillStatus.style.color = "#2b7f3b";
-      alertEl.className = "storage-alert success";
-      alertEl.innerHTML = " Plenty of Space Available";
-    }
-
-    // ===== LATEST TRANSACTION =====
-    if (data.latest_transaction) {
-      const lt = data.latest_transaction;
-      const statusText = lt.status ?? "PENDING";
-      const isAccepted = statusText.toUpperCase().includes("ACCEPT");
-      const isRejected = statusText.toUpperCase().includes("REJECT") || statusText.toUpperCase().includes("METAL");
-      const isStabilizing = statusText.toUpperCase().includes("STABILIZING");
-
-      const badgeEl = document.getElementById("latestStatusBadge");
-      badgeEl.innerText = statusText;
-      
-      if (isAccepted) {
-        badgeEl.className = "machine-badge status-accepted";
-      } else if (isRejected) {
-        badgeEl.className = "machine-badge status-rejected";
-      } else if (isStabilizing) {
-        badgeEl.className = "machine-badge status-stabilizing";
+      if (data.latest_transaction && data.latest_transaction.bottle_size) {
+        document.getElementById("bottleSize").innerText = data.latest_transaction.bottle_size;
       } else {
-        badgeEl.className = "machine-badge status-pending";
+        document.getElementById("bottleSize").innerText = "—";
       }
 
-      document.getElementById("latestWeight").innerText =
-        lt.weight !== undefined ? `${lt.weight} g` : "—";
-      document.getElementById("latestMetal").innerText = lt.metal_detected ?? "—";
-      document.getElementById("latestTime").innerText = formatMillis(lt.millis_time);
+      if (data.latest_transaction && data.latest_transaction.weight !== undefined) {
+        document.getElementById("currentWeight").innerText = data.latest_transaction.weight + " g";
+      } else {
+        document.getElementById("currentWeight").innerText = "—";
+      }
+
+      const resultEl = document.getElementById("resultStatus");
+      resultEl.innerText = resultText;
+      resultEl.className = "value " + resultClass;
+
+      // ===== STORAGE =====
+      const storageStatus = data.storage_status ?? "AVAILABLE";
+      const storageStatusEl = document.getElementById("storageStatusValue");
+      storageStatusEl.innerText = storageStatus;
+
+      if (storageStatus.toUpperCase() === "FULL") {
+        storageStatusEl.className = "storage-value full";
+      } else {
+        storageStatusEl.className = "storage-value available";
+      }
+
+      const distanceCm = data.storage_distance_cm ?? 0;
+      let percentage = Math.min(100, Math.max(0, (distanceCm / MAX_DISTANCE_CM) * 100));
+      const roundedPercentage = Math.round(percentage);
+
+      document.getElementById("fillPercentage").innerHTML = roundedPercentage + "%";
+      document.getElementById("fillPercentLabel").innerHTML = roundedPercentage + "%";
+
+      const progressFill = document.getElementById("progressFill");
+      progressFill.style.width = roundedPercentage + "%";
+      progressFill.classList.remove("warning", "danger");
+
+      const fillStatus = document.getElementById("fillStatus");
+      const alertEl = document.getElementById("storageAlert");
+
+      if (roundedPercentage >= 80) {
+        progressFill.classList.add("danger");
+        fillStatus.innerText = "Almost Full";
+        fillStatus.style.color = "#c62828";
+        alertEl.className = "storage-alert warning";
+        alertEl.innerHTML = "⚠️ Almost Full — Need to Empty!";
+      } else if (roundedPercentage >= 60) {
+        progressFill.classList.add("warning");
+        fillStatus.innerText = "Getting Full";
+        fillStatus.style.color = "#e8a83a";
+        alertEl.className = "storage-alert warning";
+        alertEl.innerHTML = "⚡ Getting Full — Consider Emptying Soon";
+      } else if (roundedPercentage >= 30) {
+        fillStatus.innerText = "Moderate Fill";
+        fillStatus.style.color = "#4caf50";
+        alertEl.className = "storage-alert success";
+        alertEl.innerHTML = "🟢 Moderate Fill — Still Plenty of Space";
+      } else {
+        fillStatus.innerText = "Plenty of Space";
+        fillStatus.style.color = "#2b7f3b";
+        alertEl.className = "storage-alert success";
+        alertEl.innerHTML = "✅ Plenty of Space Available";
+      }
     }
-
-    // ===== TRANSACTIONS =====
-    if (data.transactions && typeof data.transactions === "object") {
-      const transactionsArr = Object.values(data.transactions);
-      transactionsArr.sort((a, b) => {
-        const aTime = a.millis_time ?? 0;
-        const bTime = b.millis_time ?? 0;
-        return bTime - aTime;
-      });
-      allTransactions = transactionsArr;
-      filteredTransactions = [...allTransactions];
-      currentPage = 1;
-      renderTable();
-    } else {
-      allTransactions = [];
-      filteredTransactions = [];
-      renderTable();
-    }
-
-  }, (error) => {
-    console.error(error);
-    setOffline();
-    document.getElementById("transactionTableBody").innerHTML =
-      `<tr><td colspan="6" style="text-align:center; padding:28px; color:#c94f2c;">Sync error. Check connection.</td></tr>`;
-  });
-
-  window.logout = function() {
-    document.getElementById("loadingScreen").style.display = "flex";
-    localStorage.removeItem("kapinoyLoggedIn");
 
     setTimeout(() => {
-      window.location.href = "login.html";
-    }, 2000);
-  };
-</script>
+      document.getElementById("loadingScreen").style.display = "none";
+    }, 1200);
+
+    function createCoffeeEffects() {
+      const bg = document.getElementById('coffeeBg');
+      const emojis = ['🫘', '☕', '🌱'];
+      for (let i = 0; i < 15; i++) {
+        const bean = document.createElement('div');
+        bean.className = 'bean';
+        bean.textContent = emojis[i % emojis.length];
+        bean.style.left = Math.random() * 100 + '%';
+        bean.style.fontSize = (14 + Math.random() * 20) + 'px';
+        bean.style.animationDuration = (15 + Math.random() * 25) + 's';
+        bean.style.animationDelay = (Math.random() * 20) + 's';
+        bg.appendChild(bean);
+      }
+      for (let i = 0; i < 8; i++) {
+        const steam = document.createElement('div');
+        steam.className = 'steam';
+        steam.style.left = Math.random() * 100 + '%';
+        steam.style.top = (20 + Math.random() * 60) + '%';
+        steam.style.height = (30 + Math.random() * 60) + 'px';
+        steam.style.animationDuration = (6 + Math.random() * 6) + 's';
+        steam.style.animationDelay = (Math.random() * 8) + 's';
+        bg.appendChild(steam);
+      }
+      for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = (10 + Math.random() * 80) + '%';
+        particle.style.width = (4 + Math.random() * 8) + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+        particle.style.animationDelay = (Math.random() * 10) + 's';
+        bg.appendChild(particle);
+      }
+    }
+
+    createCoffeeEffects();
+
+    // Start with offline
+    setOffline();
+
+    onValue(machineRef, (snapshot) => {
+      const data = snapshot.val();
+      updateStatus(data);
+    }, (error) => {
+      console.error("Firebase error:", error);
+      setOffline();
+    });
+
+    window.toggleDesc = function(btn) {
+      const desc = btn.nextElementSibling;
+      desc.classList.toggle('show');
+      btn.textContent = desc.classList.contains('show') ? 'Hide Description' : 'View Description';
+    };
+
+    // ===== FAQ FUNCTIONS =====
+    window.toggleFaq = function(element) {
+      const item = element.closest('.faq-item');
+      const isActive = item.classList.contains('active');
+
+      // Close all other items in the same category
+      const category = item.closest('.faq-category');
+      const allItems = category.querySelectorAll('.faq-item');
+      allItems.forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.classList.remove('active');
+        }
+      });
+
+      // Toggle current item
+      if (isActive) {
+        item.classList.remove('active');
+      } else {
+        item.classList.add('active');
+      }
+    };
+
+    window.searchFAQs = function() {
+      const searchTerm = document.getElementById('faqSearch').value.toLowerCase().trim();
+      const faqItems = document.querySelectorAll('.faq-item');
+      const noResults = document.getElementById('faqNoResults');
+      let hasVisible = false;
+
+      faqItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (searchTerm === '' || text.includes(searchTerm)) {
+          item.style.display = 'block';
+          hasVisible = true;
+        } else {
+          item.style.display = 'none';
+          item.classList.remove('active');
+        }
+      });
+
+      // Show/hide category titles
+      const categories = document.querySelectorAll('.faq-category');
+      categories.forEach(category => {
+        const visibleItems = category.querySelectorAll('.faq-item[style*="display: block"], .faq-item:not([style*="display: none"])');
+        const title = category.querySelector('.faq-category-title');
+        if (searchTerm !== '' && visibleItems.length === 0) {
+          title.style.display = 'none';
+        } else {
+          title.style.display = 'flex';
+        }
+      });
+
+      // Show no results message
+      if (searchTerm !== '' && !hasVisible) {
+        noResults.classList.add('show');
+      } else {
+        noResults.classList.remove('show');
+      }
+    };
+  </script>
 
 </body>
 </html>
