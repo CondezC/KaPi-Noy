@@ -639,112 +639,112 @@
       }
 
       // ===== MACHINE STATUS WITH STABILIZING LOGIC =====
-const machineEl = document.getElementById("machineStatusText");
-const machineStatusText = (data.machine_status ?? "READY").toUpperCase();
+    const machineEl = document.getElementById("machineStatusText");
+    const machineStatusText = (data.machine_status ?? "READY").toUpperCase();
 
-let displayStatus = "SYSTEM READY";
-let statusClass = "status-ready";
-let resultText = "SYSTEM READY";
-let resultClass = "accepted";
+    let displayStatus = "SYSTEM READY";
+    let statusClass = "status-ready";
+    let resultText = "SYSTEM READY";
+    let resultClass = "accepted";
 
-// Latest transaction status
-const txStatus = (
-  data.latest_transaction?.status ??
-  ""
-).toUpperCase();
+    // Latest transaction status
+    const txStatus = (
+      data.latest_transaction?.status ??
+      ""
+    ).toUpperCase();
 
-console.log("Machine Status:", machineStatusText);
-console.log("Transaction Status:", txStatus);
+    console.log("Machine Status:", machineStatusText);
+    console.log("Transaction Status:", txStatus);
 
-// ====================================================
-// PRIORITY 1 - STABILIZING
-// ====================================================
-if (
-    machineStatusText.includes("STABILIZING") ||
-    txStatus.includes("STABILIZING")
-) {
+    // ====================================================
+    // PRIORITY 1 - STABILIZING
+    // ====================================================
+    if (
+        machineStatusText.includes("STABILIZING") ||
+        txStatus.includes("STABILIZING")
+    ) {
 
-    displayStatus = "STABILIZING WEIGHT...";
-    statusClass = "status-stabilizing";
+        displayStatus = "STABILIZING WEIGHT...";
+        statusClass = "status-stabilizing";
 
-    resultText = "⏳ Please Wait, Stabilizing Weight...";
-    resultClass = "";
+        resultText = "⏳ Please Wait, Stabilizing Weight...";
+        resultClass = "";
 
-// ====================================================
-// PRIORITY 2 - ACCEPTED
-// ====================================================
-} else if (txStatus.includes("ACCEPT")) {
+    // ====================================================
+    // PRIORITY 2 - ACCEPTED
+    // ====================================================
+    } else if (txStatus.includes("ACCEPT")) {
 
-    displayStatus = "ACCEPTED ✓";
-    statusClass = "status-accepted";
+        displayStatus = "ACCEPTED ✓";
+        statusClass = "status-accepted";
 
-    resultText = "✅ ACCEPTED";
-    resultClass = "accepted";
+        resultText = "✅ ACCEPTED";
+        resultClass = "accepted";
 
-// ====================================================
-// PRIORITY 3 - REJECTED
-// ====================================================
-} else if (
-    txStatus.includes("REJECT") ||
-    txStatus.includes("METAL")
-) {
+    // ====================================================
+    // PRIORITY 3 - REJECTED
+    // ====================================================
+    } else if (
+        txStatus.includes("REJECT") ||
+        txStatus.includes("METAL")
+    ) {
 
-    displayStatus = "REJECTED ✗";
-    statusClass = "status-rejected";
+        displayStatus = "REJECTED ✗";
+        statusClass = "status-rejected";
 
-    resultText = "❌ REJECTED";
-    resultClass = "rejected";
+        resultText = "❌ REJECTED";
+        resultClass = "rejected";
 
-// ====================================================
-// PRIORITY 4 - ERROR
-// ====================================================
-} else if (
-    machineStatusText.includes("ERROR") ||
-    txStatus.includes("ERROR")
-) {
+    // ====================================================
+    // PRIORITY 4 - ERROR
+    // ====================================================
+    } else if (
+        machineStatusText.includes("ERROR") ||
+        txStatus.includes("ERROR")
+    ) {
 
-    displayStatus = "ERROR";
-    statusClass = "status-error";
+        displayStatus = "ERROR";
+        statusClass = "status-error";
 
-    resultText = "⚠️ ERROR";
-    resultClass = "rejected";
+        resultText = "⚠️ ERROR";
+        resultClass = "rejected";
 
-// ====================================================
-// PRIORITY 5 - STORAGE FULL
-// ====================================================
-} else if (machineStatusText.includes("FULL")) {
+    // ====================================================
+    // PRIORITY 5 - STORAGE FULL
+    // ====================================================
+    } else if (machineStatusText.includes("FULL")) {
 
-    displayStatus = "STORAGE FULL";
-    statusClass = "status-error";
+        displayStatus = "STORAGE FULL";
+        statusClass = "status-error";
 
-    resultText = "⚠️ STORAGE FULL";
-    resultClass = "rejected";
+        resultText = "⚠️ STORAGE FULL";
+        resultClass = "rejected";
 
-// ====================================================
-// PRIORITY 6 - WAITING
-// ====================================================
-} else if (machineStatusText.includes("WAITING")) {
+    // ====================================================
+    // PRIORITY 6 - WAITING
+    // ====================================================
+    } else if (machineStatusText.includes("WAITING")) {
 
-    displayStatus = "WAITING FOR BOTTLE";
-    statusClass = "status-pending";
+        displayStatus = "WAITING FOR BOTTLE";
+        statusClass = "status-pending";
 
-    resultText = "⏳ WAITING FOR BOTTLE";
-    resultClass = "";
+        resultText = "⏳ WAITING FOR BOTTLE";
+        resultClass = "";
 
-// ====================================================
-// DEFAULT - READY
-// ====================================================
-} else {
+    // ====================================================
+    // DEFAULT - READY
+    // ====================================================
+    } else {
 
-    displayStatus = "SYSTEM READY";
-    statusClass = "status-ready";
+        displayStatus = "SYSTEM READY";
+        statusClass = "status-ready";
 
-    resultText = "SYSTEM READY";
-    resultClass = "accepted";
-}
+        resultText = "SYSTEM READY";
+        resultClass = "accepted";
+    }
 
-machineEl.innerText = displayStatus;
-machineEl.className = "machine-badge " + statusClass;
+    machineEl.innerText = displayStatus;
+    machineEl.className = "machine-badge " + statusClass;
 
       document.getElementById("dbStatus").innerText = "Connected";
       document.getElementById("dbStatus").className = "value online";
